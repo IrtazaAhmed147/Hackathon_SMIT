@@ -59,6 +59,9 @@ export const register = async (req, res, next) => {
 }
 
 
+
+
+
 export const login = async (req, res, next) => {
 
 
@@ -167,3 +170,42 @@ export const verifyEmail = async (req, res) => {
         return errorHandler(res, 500, "Something went wrong");
     }
 }
+
+
+
+
+
+
+// export const register = async (req, res, next) => {
+
+//     const { username, email, password } = req.body
+//     if (!username || !email || !password) return errorHandler(res, 400, "missing fields")
+
+//     try {
+//         const user = await User.findOne({ $or: [{ email: email }, { userName: username }] })
+//         if (user) {
+
+//             return errorHandler(res, 400, "UserName or Email Address already exists, please change and retry")
+//         }
+//         if (password.length < 8) {
+//             return errorHandler(res, 400, "Password length should be minimum 8 characters long")
+
+//         }
+//          const salt = bcrypt.genSaltSync(10);
+//         const hash = bcrypt.hashSync(password, salt);
+
+//         const doc = await User({
+//             username,
+//             email,
+//             password: hash
+//         })
+//         let savedUser = await doc.save();
+       
+        
+//             return successHandler(res, 200, "user registered successfully", savedUser )
+       
+
+//     } catch (error) {
+//         errorHandler(res, 500, error.message)
+//     }
+// }
