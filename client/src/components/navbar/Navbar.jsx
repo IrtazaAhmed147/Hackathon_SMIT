@@ -31,6 +31,10 @@ const pages = [
     url: '/reports'
   },
   {
+    name: 'Vital',
+    url: '/add-vitals'
+  },
+  {
     name: 'Login',
     url: '/login'
   },

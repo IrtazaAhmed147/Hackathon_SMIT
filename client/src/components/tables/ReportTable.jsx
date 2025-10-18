@@ -7,16 +7,16 @@ import PdfModal from '../modal/PdfModal';
 import { useDispatch } from 'react-redux';
 import { isPdfModal } from '../../redux/slices/reportSlice';
 
-function ReportCard(report) {
+function ReportTable(report) {
  
     const dispatch = useDispatch()
   return (
     <>
             
             <TableRow >
-                <TableCell>{report.reportName}</TableCell>
-                <TableCell>Dr.Ahmed</TableCell>
-                <TableCell>Aga Khan</TableCell>
+                <TableCell>{report?.reportName}</TableCell>
+                <TableCell>{report?.doctor}</TableCell>
+                <TableCell>{report?.hospital}</TableCell>
                 <TableCell>
                   {new Date(report.createdAt).toLocaleDateString()}
                 </TableCell>
@@ -37,4 +37,4 @@ function ReportCard(report) {
   )
 }
 
-export default ReportCard
+export default ReportTable

@@ -11,6 +11,13 @@ const reportSchema = new mongoose.Schema({
 
         lowercase: true,
     },
+    
+    doctor: {
+        type:String,
+    },
+    hospital: {
+        type:String,
+    },
 
     reportPdf: {
         required: true,

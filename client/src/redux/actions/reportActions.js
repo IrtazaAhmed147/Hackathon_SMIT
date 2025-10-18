@@ -34,6 +34,9 @@ export const getReports = () => async (dispatch) => {
     try {
         dispatch(reportFetchStart())
         const res = await api.get('/report', {
+                        headers: {
+                Authorization: `Bearer ${token}`,
+                          },
             withCredentials: true
         })
         console.log(res);

@@ -7,10 +7,10 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { getReports } from '../../redux/actions/reportActions';
-import ReportCard from '../../components/cards/ReportCard';
 import PdfModal from '../../components/modal/PdfModal';
+import ReportTable from '../../components/tables/ReportTable';
 
-function ReportTable() {
+function Report() {
   const dispatch = useDispatch();
   const { reports, reportLoading, reportError,pdfModal } = useSelector((state) => state.report);
 
@@ -51,7 +51,7 @@ function ReportTable() {
         <TableBody>
           {reports && reports.length > 0 ? (
             reports.map((report) => (
-              <ReportCard {...report}  key={report._id}/>
+              <ReportTable {...report}  key={report._id}/>
             ))
           ) : (
             <TableRow>
@@ -67,4 +67,4 @@ function ReportTable() {
   );
 }
 
-export default ReportTable;
+export default Report;

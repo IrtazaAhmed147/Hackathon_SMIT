@@ -12,6 +12,6 @@ const upload = multer({ storage: storage })
 
 
 reportRouter.post('/create',verifyToken,upload.single('reportPdf'), createReport)
-reportRouter.get('/', getAllReports)
+reportRouter.get('/',verifyToken, getAllReports)
 
 export {reportRouter};

@@ -69,7 +69,16 @@ function ReportForm() {
             <TextField
               fullWidth
               label="Doctor Name"
-              name="doctorName"
+              name="doctor"
+              variant="outlined"
+              margin="normal"
+              onChange={handleChange}
+              required
+            />
+            <TextField
+              fullWidth
+              label="Hospital"
+              name="hospital"
               variant="outlined"
               margin="normal"
               onChange={handleChange}

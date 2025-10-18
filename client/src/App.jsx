@@ -8,6 +8,7 @@ import Otp from './pages/otp/Otp.jsx';
 import NotFound from './pages/notFound/NotFound.jsx';
 import UploadReport from './pages/uploadReport/UploadReport.jsx';
 import Reports from './pages/reports/Reports.jsx';
+import AddVitals from './pages/vitals/VitalPage.jsx';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path='/upload-report' element={<UploadReport />} />
           <Route path='/reports' element={<Reports />} />
+          <Route path='/add-vitals' element={<AddVitals />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
