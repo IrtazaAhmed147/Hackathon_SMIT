@@ -5,58 +5,58 @@ import bcrypt, { compare } from "bcryptjs";
 import { generateEmail, GenerateToken, VerifyEmailToken } from '../utils/commonFunctions.js';
 import { nanoid } from 'nanoid'
 
-export const register = async (req, res, next) => {
+// export const register = async (req, res, next) => {
 
-    const { username, email, password } = req.body
+//     const { username, email, password } = req.body
 
-    if (!username || !email || !password) return errorHandler(res, 400, "missing fields")
+//     if (!username || !email || !password) return errorHandler(res, 400, "missing fields")
 
-    try {
+//     try {
 
-        const user = await User.findOne({ $or: [{ email: email }, { userName: username }] })
-        if (user) {
+//         const user = await User.findOne({ $or: [{ email: email }, { userName: username }] })
+//         if (user) {
 
-            return errorHandler(res, 400, "UserName or Email Address already exists, please change and retry")
-        }
-        if (password.length < 8) {
-            return errorHandler(res, 400, "Password length should be minimum 8 characters long")
+//             return errorHandler(res, 400, "UserName or Email Address already exists, please change and retry")
+//         }
+//         if (password.length < 8) {
+//             return errorHandler(res, 400, "Password length should be minimum 8 characters long")
 
-        }
-
-
+//         }
 
 
-        const salt = bcrypt.genSaltSync(10);
-        const hash = bcrypt.hashSync(password, salt);
-
-        const doc = await User({
-            username,
-            email,
-            password: hash
-        })
 
 
-        const otp = nanoid().slice(0, 6)
-        doc.otp = otp
-        doc.otpExpires = Date.now() + 600000; // OTP expires in 10 minutes
-        doc.isVerified = false
+//         const salt = bcrypt.genSaltSync(10);
+//         const hash = bcrypt.hashSync(password, salt);
 
-        let savedUser = await doc.save();
+//         const doc = await User({
+//             username,
+//             email,
+//             password: hash
+//         })
 
-        const token = GenerateToken({ data: savedUser, expiresIn: '10m' });
 
-        if (savedUser) {
-            const emailSent = await generateEmail(email, otp)
+//         const otp = nanoid().slice(0, 6)
+//         doc.otp = otp
+//         doc.otpExpires = Date.now() + 600000; // OTP expires in 10 minutes
+//         doc.isVerified = false
 
-            return successHandler(res, 200, "Signed up Successfully, OTP send to your email address please verify", { ...savedUser, token: token })
-        } else {
-            return errorHandler(res, 500, "User did not saved")
-        }
+//         let savedUser = await doc.save();
 
-    } catch (error) {
-        errorHandler(res, 500, error.message)
-    }
-}
+//         const token = GenerateToken({ data: savedUser, expiresIn: '10m' });
+
+//         if (savedUser) {
+//             const emailSent = await generateEmail(email, otp)
+
+//             return successHandler(res, 200, "Signed up Successfully, OTP send to your email address please verify", { ...savedUser, token: token })
+//         } else {
+//             return errorHandler(res, 500, "User did not saved")
+//         }
+
+//     } catch (error) {
+//         errorHandler(res, 500, error.message)
+//     }
+// }
 
 
 
@@ -86,8 +86,8 @@ export const login = async (req, res, next) => {
             return errorHandler(res, 400, "Invalid Credentials")
         }
 
-        const isVerified = await User.findOne({ isVerified: true, username: req.body.username })
-        if (!isVerified) return errorHandler(res, 403, "Account already exist. Verify your account")
+        // const isVerified = await User.findOne({ isVerified: true, username: req.body.username })
+        // if (!isVerified) return errorHandler(res, 403, "Account already exist. Verify your account")
 
 
 
@@ -176,36 +176,36 @@ export const verifyEmail = async (req, res) => {
 
 
 
-// export const register = async (req, res, next) => {
+export const register = async (req, res, next) => {
 
-//     const { username, email, password } = req.body
-//     if (!username || !email || !password) return errorHandler(res, 400, "missing fields")
+    const { username, email, password } = req.body
+    if (!username || !email || !password) return errorHandler(res, 400, "missing fields")
 
-//     try {
-//         const user = await User.findOne({ $or: [{ email: email }, { userName: username }] })
-//         if (user) {
+    try {
+        const user = await User.findOne({ $or: [{ email: email }, { userName: username }] })
+        if (user) {
 
-//             return errorHandler(res, 400, "UserName or Email Address already exists, please change and retry")
-//         }
-//         if (password.length < 8) {
-//             return errorHandler(res, 400, "Password length should be minimum 8 characters long")
+            return errorHandler(res, 400, "UserName or Email Address already exists, please change and retry")
+        }
+        if (password.length < 8) {
+            return errorHandler(res, 400, "Password length should be minimum 8 characters long")
 
-//         }
-//          const salt = bcrypt.genSaltSync(10);
-//         const hash = bcrypt.hashSync(password, salt);
+        }
+         const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(password, salt);
 
-//         const doc = await User({
-//             username,
-//             email,
-//             password: hash
-//         })
-//         let savedUser = await doc.save();
+        const doc = await User({
+            username,
+            email,
+            password: hash
+        })
+        let savedUser = await doc.save();
        
         
-//             return successHandler(res, 200, "user registered successfully", savedUser )
+            return successHandler(res, 200, "user registered successfully", savedUser )
        
 
-//     } catch (error) {
-//         errorHandler(res, 500, error.message)
-//     }
-// }
+    } catch (error) {
+        errorHandler(res, 500, error.message)
+    }
+}

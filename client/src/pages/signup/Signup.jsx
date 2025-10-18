@@ -34,7 +34,7 @@ function Signup() {
         await dispatch(registerUser(form.current))
             .then((msg) => {
                 notify('success', msg)
-                navigate('/otp')
+                navigate('/login')
             })
             .catch((err) => notify('error', err))
     }

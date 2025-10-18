@@ -23,8 +23,12 @@ const pages = [
     url: '/'
   },
   {
-    name: 'About',
-    url: '/about'
+    name: 'Upload Reports',
+    url: '/upload-report'
+  },
+  {
+    name: 'Reports',
+    url: '/reports'
   },
   {
     name: 'Login',
@@ -41,10 +45,7 @@ const settings = [{
 }, {
   name: 'Account',
   url: '/account'
-}, {
-  name: 'Dashboard',
-  url: '/dashboard'
-}, {
+},  {
   name: 'Logout',
   url: '/logout'
 }];
@@ -94,7 +95,7 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#555555' }}>
+    <AppBar position="static" sx={{ backgroundColor: '#27761c' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
 
@@ -112,7 +113,7 @@ function Navbar() {
             }}
           >
             <Link to={'/'} style={{color:'rgb(216 216 216)'}}>
-              My App
+              HealthMate
             </Link>
           </Typography>
 
@@ -172,7 +173,7 @@ function Navbar() {
             }}
           >
             <Link to={'/'} style={{color:'rgb(216 216 216)'}}>
-              My App
+              HealthMate
             </Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>

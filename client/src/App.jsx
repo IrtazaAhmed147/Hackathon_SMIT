@@ -6,6 +6,8 @@ import Login from './pages/login/Login.jsx';
 import Signup from './pages/signup/Signup.jsx';
 import Otp from './pages/otp/Otp.jsx';
 import NotFound from './pages/notFound/NotFound.jsx';
+import UploadReport from './pages/uploadReport/UploadReport.jsx';
+import Reports from './pages/reports/Reports.jsx';
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
 
         <Route element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path='/upload-report' element={<UploadReport />} />
+          <Route path='/reports' element={<Reports />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
