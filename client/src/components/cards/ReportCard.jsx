@@ -24,16 +24,13 @@ function ReportCard(report) {
                   <Button
                     variant="outlined"
                     color="primary"
-                    onClick={()=> { dispatch(isPdfModal())
-                        
-                    } }
+                   onClick={() => dispatch(isPdfModal(report.reportPdf))}
                     target="_blank"
                     >
                     View PDF
                   </Button>
                 </TableCell>
               </TableRow>
-
 
                       </>
               

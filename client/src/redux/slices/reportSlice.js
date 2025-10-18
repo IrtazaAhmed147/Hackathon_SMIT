@@ -5,7 +5,8 @@ const initialState = {
     reports: [],
     reportLoading: false,
     reportError: false,
-    pdfModal: false
+      pdfModalOpen: false,
+    selectedPdf: null, 
 }
 const reportSlice = createSlice({
     name: 'report',
@@ -30,12 +31,18 @@ const reportSlice = createSlice({
             state.reportError = null
             
         },
-        isPdfModal: (state)=> {
-            state.pdfModal = !state.pdfModal
-        }
+         isPdfModal: (state, action) => {
+      state.pdfModalOpen = true;
+      state.selectedPdf = action.payload; // 👈 save PDF URL here
+    },
+    closePdfModal: (state) => {
+      state.pdfModalOpen = false;
+      state.selectedPdf = null;
+    },
 
     }
 })
 
-export const { reportFetchStart, reportFetchSuccess, reportFetchFailure,reportSuccess ,isPdfModal} = reportSlice.actions
+export const { reportFetchStart, reportFetchSuccess, reportFetchFailure,reportSuccess , isPdfModal,
+  closePdfModal,} = reportSlice.actions
 export default reportSlice.reducer

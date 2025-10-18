@@ -62,7 +62,7 @@ function ReportTable() {
           )}
         </TableBody>
       </Table>
-      {pdfModal && <PdfModal/>}
+      <PdfModal />
     </Box>
   );
 }
