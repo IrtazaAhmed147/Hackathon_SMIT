@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { getVitals } from "../../redux/actions/vitalActions";
-import VitalCard from "../../components/cards/vitalCard.jsx";
+import VitalCard from "../../components/cards/VitalCard.jsx";
 
 export default function Home() {
   const dispatch = useDispatch();
