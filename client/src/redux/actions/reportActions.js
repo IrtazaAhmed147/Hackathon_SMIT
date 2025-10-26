@@ -1,5 +1,5 @@
 import api from '../../utils/common.js'
-import { reportFetchFailure, reportFetchStart, reportFetchSuccess, reportSuccess } from '../slices/reportSlice.js'
+import { reportFetchFailure, reportFetchStart, reportFetchSuccess, reportSuccess, reportUploadFailure } from '../slices/reportSlice.js'
 
 const token = localStorage.getItem("token")
 export const createReport = (form) => async (dispatch) => {
@@ -22,11 +22,16 @@ export const createReport = (form) => async (dispatch) => {
         if (res.data.success) {
             dispatch(reportSuccess())
         }
-        return res.data.data._id
+        console.log(res);
+        
+        return res.data.data.id
     } catch (error) {
-        console.log(error);
+      if(error?.response?.data) {
 
-        dispatch(reportFetchFailure(error.message))
+        console.log(error.response.data.message);
+        
+        dispatch(reportUploadFailure(error.response.data.message))
+      }
     }
 }
 

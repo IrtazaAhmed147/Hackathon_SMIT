@@ -153,17 +153,7 @@ export default function ReportDetailPage() {
                       <EditNote />
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="Share Report">
-                    <IconButton
-                      sx={{
-                        bgcolor: "#e3f2fd",
-                        "&:hover": { bgcolor: "#bbdefb" },
-                      }}
-                      color="primary"
-                    >
-                      <Share />
-                    </IconButton>
-                  </Tooltip>
+                  
                   <Tooltip title="Delete Report">
                     <IconButton
                       onClick={() => dispatch(deleteReport(id)).then((msg) => {

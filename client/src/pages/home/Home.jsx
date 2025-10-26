@@ -12,7 +12,7 @@ import CreateMemberModal from "../../components/modal/CreateMemberModal";
 import { createFamilyMember, getFamilyMembers } from "../../redux/actions/familyMemberActions";
 import { notify } from "../../utils/HelperFunctions";
 import { useDispatch, useSelector } from "react-redux";
-import FamilyMemberCard from "../../components/cards/familyMemberCard";
+import FamilyMemberCard from "../../components/cards/FamilyMemberCard";
 import FeatureCard from "../../components/cards/FeatureCard";
 
 
@@ -20,7 +20,7 @@ const Home = () => {
 
   const [openModal, setOpenModal] = useState(false);
   const [formData, setFormData] = useState({});
-  const { familyMembers, familyLoading } = useSelector(
+  const { familyMembers, familyLoading, familyError } = useSelector(
     (state) => state.familyMember
   );
 
@@ -33,6 +33,12 @@ const Home = () => {
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.name.trim() || !formData.relation.trim() || !formData.age.trim() || !formData.gender.trim()) {
+      notify("error", "All Fields required")
+      return
+    }
+
     await dispatch(createFamilyMember(formData)).then((msg) => notify("success", msg));
     dispatch(getFamilyMembers()); // Refresh list after adding
     setOpenModal(false);

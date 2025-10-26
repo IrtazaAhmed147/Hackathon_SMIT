@@ -3,25 +3,26 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { errorHandler, successHandler } from "../utils/responseHandler.js";
 import aiInsightsModel from "../models/aiInsightsModel.js";
 
-
 export const createReport = async (req, res) => {
   try {
-    console.log(req.body);
-    
     const { reportName, doctor, hospital, memberId } = req.body;
     const file = req.file;
 
-    if (!reportName) return errorHandler(res, 400, "Report name is required");
+    if (!reportName?.trim() || !doctor?.trim() || !hospital?.trim() || !memberId || !file) {
+      return errorHandler(res, 400, "Missing required fields");
+    }
 
-    let pdfUrl = null;
-    if (file) {
+    let pdfUrl;
+    try {
       const uploadResult = await uploadOnCloudinary(file, "report-pdf");
       pdfUrl = uploadResult.secure_url;
+    } catch (uploadErr) {
+      return errorHandler(res, 500, "PDF upload failed. Please try again.");
     }
 
     const reportData = new reportModel({
       userId: req.user.id,
-      familyMemberId: memberId || null, // optional
+      familyMemberId: memberId || null,
       reportName,
       doctor,
       hospital,
@@ -30,11 +31,12 @@ export const createReport = async (req, res) => {
 
     await reportData.save();
 
-    successHandler(res, 201, "Report created successfully", reportData);
+    successHandler(res, 201, "Report created successfully", { id: reportData._id });
   } catch (error) {
-    errorHandler(res, 400, error.message);
+    errorHandler(res, 500, error.message || "Something went wrong");
   }
 };
+
 
 export const getAllReports = async (req, res) => {
   try {

@@ -11,7 +11,7 @@ import {
   Button,
   CircularProgress,
 } from "@mui/material";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import { useDispatch, useSelector } from "react-redux";
 import { createReport, getFamilyMemberReports } from "../../redux/actions/reportActions.js";
@@ -22,7 +22,7 @@ import { analyzeReport } from "../../redux/actions/aiAction.js";
 import CreateVitalModal from "../../components/modal/CreateVitalModal.jsx";
 import { createVital, getMemberVitals } from "../../redux/actions/vitalActions.js";
 import ReportTable from "../../components/tables/ReportTable.jsx";
-import VitalCard from "../../components/cards/vitalCard.jsx";
+import VitalCard from "../../components/cards/VitalCard.jsx";
 
 const FamilyMemberReports = () => {
   const dispatch = useDispatch();
@@ -45,17 +45,47 @@ const FamilyMemberReports = () => {
 
 
   const handleSubmitVital = async (formData) => {
-
     console.log(formData);
+
+    if (!formData.bloodPressure.trim() || !formData.bloodSugar.trim() || !formData.heartRate.trim() || !formData.height.trim() || !formData.temperature.trim() || !formData.weight.trim()) {
+      notify("error", "All Fields required")
+      return
+    }
+
     formData.memberId = memberId;
-    await dispatch(createVital(formData)).then((msg) => notify("success", msg));
+    await dispatch(createVital(formData)).then((msg) => notify("success", msg)).catch((err) => notify("error", err));
     setOpenVitalModal(false);
   };
+
+
   const handleSubmitReport = async (formData) => {
     formData.append("memberId", memberId);
-    await dispatch(createReport(formData)).then((id) => dispatch(analyzeReport(id))).then((msg) => notify("success", msg)).catch((msg) => notify("error", msg));
-    setOpenModal(false);
+
+    try {
+      // Step 1: Create the report
+      const id = await dispatch(createReport(formData));
+      console.log(id);
+      
+      if (!id) {
+        notify("error", "Failed to create report");
+        return;
+      }
+
+      // Step 2: Analyze report only if creation succeeded
+      try {
+        const msg = await dispatch(analyzeReport(id));
+        notify("success", msg || "Report analyzed successfully");
+      } catch (analyzeErr) {
+        console.error(analyzeErr);
+        notify("error", "Report created but analysis failed.");
+      }
+        setOpenModal(false);
+    } catch (err) {
+      console.error(err);
+      notify("error", err?.message || "Failed to create report");
+    } 
   };
+
 
   useEffect(() => {
     if (memberId) {
@@ -68,7 +98,7 @@ const FamilyMemberReports = () => {
   }, [dispatch, memberId]);
 
   return (
-    <Box sx={{ p: { xs: 2, md: 6 }, bgcolor: "#f8fafb", minHeight: "100vh" }}>
+    <Box sx={{ p: { xs: 1, md: 6 }, bgcolor: "#f8fafb", minHeight: "100vh" }}>
       {/* Header Section */}
       <Box
         sx={{
@@ -80,8 +110,8 @@ const FamilyMemberReports = () => {
           gap: 2,
         }}
       >
-        <Typography variant="h4" fontWeight="bold" color="text.primary">
-          {familyMember?.memberName}'s Reports
+        <Typography sx={{fontSize:{xs:'27px',md:'40px'}}} fontWeight="bold" color="text.primary">
+          {familyMember?.memberName?.charAt(0)?.toUpperCase() + familyMember?.memberName?.slice(1)}'s Reports
         </Typography>
 
         <Box sx={{ display: "flex", gap: 2 }}>
@@ -93,8 +123,9 @@ const FamilyMemberReports = () => {
             sx={{
               background: "linear-gradient(135deg, #40b77d, #34a3c8)",
               textTransform: "none",
+              fontSize:{xs:'12px', md:'16px'},
               borderRadius: 2,
-              px: 3,
+              px: {xs:1,md:3},
               "&:hover": {
                 background: "linear-gradient(135deg, #34a3c8, #40b77d)",
               },
@@ -109,7 +140,8 @@ const FamilyMemberReports = () => {
               background: "linear-gradient(135deg, #1f9a1bff, #2455aaff)",
               textTransform: "none",
               borderRadius: 2,
-              px: 3,
+                fontSize:{xs:'12px', md:'16px'},
+                px: {xs:1,md:3},
               "&:hover": {
                 background: "linear-gradient(135deg, #1b7e17ff, #174087ff)",
               },
@@ -141,24 +173,25 @@ const FamilyMemberReports = () => {
           display: "flex",
           justifyContent: "space-between",
           flexWrap: "wrap",
-          gap: 2,
+          gap: {xs:1,md:2},
           backgroundColor: "white",
           borderRadius: 3,
+
           boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
-          p: 3,
+          p: {xs:"10px",md:3},
           mb: 5,
         }}
       >
-        <Typography variant="subtitle1">
+        <Typography variant="subtitle1" sx={{fontSize:{xs:"13px",md:"15px"}}}>
           <strong>Name:</strong> {familyMember?.memberName}
         </Typography>
-        <Typography variant="subtitle1">
+        <Typography variant="subtitle1" sx={{fontSize:{xs:"13px",md:"15px"}}}>
           <strong>Relation:</strong> {familyMember?.relation}
         </Typography>
-        <Typography variant="subtitle1">
+        <Typography variant="subtitle1" sx={{fontSize:{xs:"13px",md:"15px"}}}>
           <strong>Age:</strong> {familyMember?.age}
         </Typography>
-        <Typography variant="subtitle1">
+        <Typography variant="subtitle1" sx={{fontSize:{xs:"13px",md:"15px"}}}>
           <strong>Gender:</strong> {familyMember?.gender}
         </Typography>
       </Box>
@@ -192,21 +225,19 @@ const FamilyMemberReports = () => {
               }}
             >
               <TableRow>
-                <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                <TableCell sx={{p:{xs:1,md:2},fontSize:{xs:"10px",md:"15px"}, color: "white", fontWeight: "bold" }}>
                   Report Name
                 </TableCell>
-                <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                <TableCell sx={{p:{xs:1,md:2},fontSize:{xs:"10px",md:"15px"}, color: "white", fontWeight: "bold" }}>
                   Doctor
                 </TableCell>
-                <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                <TableCell sx={{p:{xs:1,md:2},fontSize:{xs:"10px",md:"15px"}, color: "white", fontWeight: "bold" }}>
                   Hospital
                 </TableCell>
-                <TableCell sx={{ color: "white", fontWeight: "bold" }}>
+                <TableCell sx={{p:{xs:1,md:2},fontSize:{xs:"10px",md:"15px"}, color: "white", fontWeight: "bold" }}>
                   Date
                 </TableCell>
-                <TableCell sx={{ color: "white", fontWeight: "bold" }}>
-                  Action
-                </TableCell>
+
               </TableRow>
             </TableHead>
 
@@ -221,7 +252,7 @@ const FamilyMemberReports = () => {
       )}
       <Box sx={{ mt: 7 }}>
         <Typography
-          variant="h4"
+        sx={{fontSize:{xs:'27px',md:'40px'}}}
           fontWeight="bold"
           mb={3}
           color="text.primary"
@@ -233,11 +264,12 @@ const FamilyMemberReports = () => {
           sx={{
             display: "flex",
             flexWrap: "wrap",
+            justifyContent:{xs:'center',md:'start'},
             gap: 3,
           }}
         >
-          {vitals.map((vital, index) => (
-            <VitalCard vital={vital} />
+          {vitals.length === 0 ? <Typography sx={{fontSize:{xs:"10px",md:"15px"}}}>No Vitals Added</Typography>  : vitals?.map((vital, index) => (
+            <VitalCard vital={vital} key={index} />
           ))}
         </Box>
       </Box>

@@ -5,6 +5,7 @@ const initialState = {
   reports: [],
   reportLoading: false,
   reportError: false,
+  reportUploadError: false,
   pdfModalOpen: false,
   selectedPdf: null,
 }
@@ -25,6 +26,10 @@ const reportSlice = createSlice({
     reportFetchFailure: (state, action) => {
       state.reportLoading = false;
       state.reportError = action.payload;
+    },
+    reportUploadFailure: (state, action) => {
+      state.reportLoading = false;
+      state.reportUploadError = action.payload;
     },
     reportSuccess: (state) => {
       state.reportLoading = false
@@ -49,5 +54,5 @@ const reportSlice = createSlice({
 })
 
 export const { reportFetchStart, reportFetchSuccess, reportFetchFailure, reportSuccess, isPdfModal,
-  closePdfModal, resetReports } = reportSlice.actions
+  closePdfModal, resetReports,reportUploadFailure } = reportSlice.actions
 export default reportSlice.reducer

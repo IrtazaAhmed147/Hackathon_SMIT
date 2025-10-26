@@ -35,7 +35,7 @@ function CreateVitalModal({ open, onClose, onSubmit, loading }) {
                     <Paper
                         elevation={5}
                         sx={{
-                            p: 5,
+                            p: {xs:1,md:5},
                             borderRadius: 4,
                             background: "#fdfefe",
                             boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
@@ -64,6 +64,7 @@ function CreateVitalModal({ open, onClose, onSubmit, loading }) {
                                 {/* Blood Pressure */}
                                 <Grid item xs={12} sm={6}>
                                     <TextField
+                                        required={true}
                                         fullWidth
                                         name="bloodPressure"
                                         label="Blood Pressure (mmHg)"
@@ -77,6 +78,7 @@ function CreateVitalModal({ open, onClose, onSubmit, loading }) {
                                 {/* Heart Rate */}
                                 <Grid item xs={12} sm={6}>
                                     <TextField
+                                        required={true}
                                         fullWidth
                                         name="heartRate"
                                         label="Heart Rate (bpm)"
@@ -99,12 +101,14 @@ function CreateVitalModal({ open, onClose, onSubmit, loading }) {
                                         onChange={handleChange}
                                         variant="outlined"
                                         size="small"
+                                        required={true}
                                     />
                                 </Grid>
 
                                 {/* Blood Sugar */}
                                 <Grid item xs={12} sm={6}>
                                     <TextField
+                                        required={true}
                                         fullWidth
                                         name="bloodSugar"
                                         label="Blood Sugar (mg/dL)"
@@ -119,6 +123,7 @@ function CreateVitalModal({ open, onClose, onSubmit, loading }) {
                                 {/* Weight */}
                                 <Grid item xs={12} sm={6}>
                                     <TextField
+                                        required={true}
                                         fullWidth
                                         name="weight"
                                         label="Weight (kg)"
@@ -133,6 +138,7 @@ function CreateVitalModal({ open, onClose, onSubmit, loading }) {
                                 {/* Height */}
                                 <Grid item xs={12} sm={6}>
                                     <TextField
+                                        required={true}
                                         fullWidth
                                         name="height"
                                         label="Height (cm)"
@@ -168,9 +174,10 @@ function CreateVitalModal({ open, onClose, onSubmit, loading }) {
                                 sx={{
                                     mt: 4,
                                     py: 1.2,
+                                    lineHeight:{xs:1,md:1.75},
                                     borderRadius: 3,
                                     fontWeight: 600,
-                                    fontSize: "0.95rem",
+                                    fontSize: {xs:"12px",md:"0.95rem"},
                                     background: "linear-gradient(135deg, #40b77d, #34a3c8)",
                                     boxShadow: "0 6px 15px rgba(0,0,0,0.1)",
                                     "&:hover": {

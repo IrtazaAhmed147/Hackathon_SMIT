@@ -56,9 +56,9 @@ const CreateReportModal = ({ open, onClose, onSubmit, aiLoading, reportLoading }
           bgcolor: "background.paper",
           borderRadius: 3,
           boxShadow: "0 8px 30px rgba(0,0,0,0.3)",
-          width: "80%",
+          width: "90%",
           maxWidth: "1000px",
-          p: 4,
+          p: {xs:1,md:4},
           display: "flex",
           flexDirection: "column",
           gap: 3,
@@ -110,7 +110,7 @@ const CreateReportModal = ({ open, onClose, onSubmit, aiLoading, reportLoading }
         <Divider />
 
         {/* Content */}
-        <Box display="flex" gap={4}>
+        <Box display="flex" sx={{flexDirection:{xs:"column",md:"row"}}} gap={4} flexWrap={'wrap'}>
           {/* Left: Form Fields */}
           <Box flex={1} display="flex" flexDirection="column" gap={2}>
             <TextField
@@ -122,6 +122,7 @@ const CreateReportModal = ({ open, onClose, onSubmit, aiLoading, reportLoading }
               required
               variant="outlined"
               disabled={isLoading}
+             
             />
             <TextField
               label="Doctor Name"

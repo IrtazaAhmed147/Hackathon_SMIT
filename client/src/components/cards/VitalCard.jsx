@@ -54,7 +54,7 @@ export default function VitalCard({ vital }) {
         },
       }}
     >
-      <CardContent sx={{ p: 2.5 }}>
+      <CardContent sx={{ p:{xs:1,md: 2.5} }}>
         {/* Header */}
         <Box textAlign="center" mb={1}>
           <Typography variant="caption" color="text.secondary">

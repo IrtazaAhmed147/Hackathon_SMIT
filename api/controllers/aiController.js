@@ -9,7 +9,7 @@ export const analyzeReport = async (req, res) => {
   
   try {
     const { id } = req.params;
-    
+    if(!id) return errorHandler(res, 404, "Report not uploaded")
     const userId = req.user.id;
     const report = await reportModel.findById(id);
     
