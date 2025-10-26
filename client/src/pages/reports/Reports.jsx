@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getReports } from '../../redux/actions/reportActions';
 import PdfModal from '../../components/modal/PdfModal';
 import ReportTable from '../../components/tables/ReportTable';
+import { Link } from 'react-router-dom';
 
 function Report() {
   const dispatch = useDispatch();
@@ -51,7 +52,9 @@ function Report() {
         <TableBody>
           {reports && reports.length > 0 ? (
             reports.map((report) => (
+            
               <ReportTable {...report}  key={report._id}/>
+             
             ))
           ) : (
             <TableRow>

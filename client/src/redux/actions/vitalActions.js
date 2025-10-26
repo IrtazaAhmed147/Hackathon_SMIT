@@ -53,3 +53,25 @@ export const getVitals = () => async (dispatch) => {
         dispatch(vitalFetchFailure(error.message))
     }
 } 
+
+export const getMemberVitals = (id) => async (dispatch) => {
+    try {
+        dispatch(vitalFetchStart())
+        const res = await api.get(`/vital/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            withCredentials: true
+        })
+        console.log(res);
+
+        if (res.data.success) {
+            dispatch(vitalFetchSuccess(res.data.data))
+        }
+        return res.data.message
+    } catch (error) {
+        console.log(error);
+
+        dispatch(vitalFetchFailure(error.message))
+    }
+} 

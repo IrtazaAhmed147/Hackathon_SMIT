@@ -1,46 +1,67 @@
 import reportModel from "../models/reportModel.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { errorHandler, successHandler } from "../utils/responseHandler.js";
-
 export const createReport = async (req, res) => {
-    try {
-        console.log(req.user);
-console.log(req.body);
+  try {
+    console.log(req.body);
+    
+    const { reportName, doctor, hospital, memberId } = req.body;
+    const file = req.file;
 
-        const { reportName, doctor, hospital} = req.body;
-        const file = req.file
+    if (!reportName) return errorHandler(res, 400, "Report name is required");
 
-        if (file) {
-            console.log(file);
-            
-            const url = await uploadOnCloudinary(file, 'report-pdf');
-            req.body.reportPdf = url.secure_url
-        }
-        const reportData = await reportModel({
-            userId: req.user.id,
-            reportName, reportPdf: req.body.reportPdf,
-            hospital,
-            doctor
-        })
-        await reportData.save()
-        successHandler(res, 201, "report created successfully", reportData)
-    } catch (error) {
-        errorHandler(res, 400, error.message)
+    let pdfUrl = null;
+    if (file) {
+      const uploadResult = await uploadOnCloudinary(file, "report-pdf");
+      pdfUrl = uploadResult.secure_url;
     }
-}
 
-export const getAllReports = async(req,res) => {
-  console.log(req.user);
-  
-     try {
-            const reportData = await reportModel.find({userId: req.user.id})
-            successHandler(res, 200, "All reports fetched", reportData)
-        }
-        catch (err) {
-            console.log(err);
-            errorHandler(res, 400, err.message)
-        }
-}
+    const reportData = new reportModel({
+      userId: req.user.id,
+      familyMemberId: memberId || null, // optional
+      reportName,
+      doctor,
+      hospital,
+      reportPdf: pdfUrl,
+    });
+
+    await reportData.save();
+
+    successHandler(res, 201, "Report created successfully", reportData);
+  } catch (error) {
+    errorHandler(res, 400, error.message);
+  }
+};
+
+export const getAllReports = async (req, res) => {
+  try {
+    const reportData = await reportModel
+      .find({ userId: req.user.id, familyMemberId: null })
+      .sort({ createdAt: -1 });
+
+    successHandler(res, 200, "All user reports fetched", reportData);
+  } catch (err) {
+    errorHandler(res, 400, err.message);
+  }
+};
+
+export const getFamilyMemberReports = async (req, res) => {
+  try {
+    const { memberId } = req.params;
+
+    const reportData = await reportModel
+      .find({ userId: req.user.id, familyMemberId: memberId })
+      .sort({ createdAt: -1 });
+
+    if (!reportData.length)
+      return successHandler(res, 200, "No reports found for this member", []);
+
+    successHandler(res, 200, "Family member reports fetched", reportData);
+  } catch (err) {
+    errorHandler(res, 400, err.message);
+  }
+};
+
 
 
 export const analyzeReport = async (req, res) => {

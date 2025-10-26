@@ -22,7 +22,7 @@ export const createReport = (form) => async (dispatch) => {
         if (res.data.success) {
             dispatch(reportSuccess())
         }
-        return res.data.message
+        return res.data.data._id
     } catch (error) {
         console.log(error);
 
@@ -51,3 +51,24 @@ export const getReports = () => async (dispatch) => {
         dispatch(reportFetchFailure(error.message))
     }
 } 
+
+
+
+export const getFamilyMemberReports = (memberId) => async (dispatch) => {
+  try {
+    dispatch(reportFetchStart());
+
+    const res = await api.get(`/report/family/${memberId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
+    });
+
+    if (res.data.success) {
+      dispatch(reportFetchSuccess(res.data.data));
+    }
+    return res.data.message;
+  } catch (error) {
+    console.error("Get family member reports error:", error);
+    dispatch(reportFetchFailure(error.message));
+  }
+};

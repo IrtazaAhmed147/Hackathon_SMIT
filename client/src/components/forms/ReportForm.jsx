@@ -11,6 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { notify } from "../../utils/HelperFunctions";
 import { createReport } from "../../redux/actions/reportActions";
+import { analyzeReport } from "../../redux/actions/aiAction";
 
 function ReportForm() {
   const form = useRef({});
@@ -44,7 +45,7 @@ function ReportForm() {
     }
 
     dispatch(createReport(formData))
-      .then((msg) => notify("success", msg))
+      .then((id) => dispatch(analyzeReport(id))).then(()=> notify("success", "Report Uploaded Successfully"))
       .catch((err) => notify("error", err));
   };
 

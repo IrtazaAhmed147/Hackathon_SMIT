@@ -16,24 +16,22 @@ import api from '../../utils/common.js'
 import { useDispatch, useSelector } from 'react-redux';
 import { userReset } from '../../redux/slices/authSlice';
 import { notify } from '../../utils/HelperFunctions';
+import { resetReports } from '../../redux/slices/reportSlice.js';
+import { resetAi } from '../../redux/slices/aiSlice.js';
+import { resetFamilyMembers } from '../../redux/slices/familyMemberSlice.js';
+import { resetVitals } from '../../redux/slices/vitalSlice.js';
 
 const pages = [
   {
     name: 'Home',
     url: '/'
   },
+
   {
-    name: 'Upload Reports',
-    url: '/upload-report'
+    name: 'Chatbot',
+    url: '/chatbot'
   },
-  {
-    name: 'Reports',
-    url: '/reports'
-  },
-  {
-    name: 'Vital',
-    url: '/add-vitals'
-  },
+
   {
     name: 'Login',
     url: '/login'
@@ -43,16 +41,15 @@ const pages = [
     url: '/signup'
   },
 ]
-const settings = [{
-  name: 'Profile',
-  url: '/profile'
-}, {
-  name: 'Account',
-  url: '/account'
-},  {
-  name: 'Logout',
-  url: '/logout'
-}];
+const settings = [
+  //   {
+  //   name: 'Profile',
+  //   url: '/profile'
+  // },  
+  {
+    name: 'Logout',
+    url: '/logout'
+  }];
 
 function Navbar() {
   const navigate = useNavigate()
@@ -69,6 +66,10 @@ function Navbar() {
       localStorage.removeItem('user')
       localStorage.removeItem('token')
       dispatch(userReset())
+      dispatch(resetReports())
+      dispatch(resetAi())
+      dispatch(resetFamilyMembers())
+      dispatch(resetVitals())
       navigate('/login')
 
       notify('success', 'User logged out successfully')
@@ -99,11 +100,11 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#27761c' }}>
+    <AppBar position="static" sx={{ background: "linear-gradient(135deg, #40b77d, #34a3c8)" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
 
-          <Typography
+          {/* <Typography
             variant="h6"
             noWrap
 
@@ -119,7 +120,7 @@ function Navbar() {
             <Link to={'/'} style={{color:'rgb(216 216 216)'}}>
               HealthMate
             </Link>
-          </Typography>
+          </Typography> */}
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -164,7 +165,7 @@ function Navbar() {
           </Box>
 
           {/* windows */}
-          <Typography
+          {/* <Typography
             variant="h5"
             noWrap
             sx={{
@@ -179,7 +180,7 @@ function Navbar() {
             <Link to={'/'} style={{color:'rgb(216 216 216)'}}>
               HealthMate
             </Link>
-          </Typography>
+          </Typography> */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages
               .filter((page) => {
@@ -190,7 +191,7 @@ function Navbar() {
                 <Link key={page.name} to={page.url}>
                   <Button
                     onClick={handleCloseNavMenu}
-                    sx={{ my: 2, color: 'white', display: 'block' }}
+                    sx={{ my: 2, color: '#fff', display: 'block' }}
                   >
                     {page.name}
                   </Button>
@@ -220,7 +221,7 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting,i) => {
+              {settings.map((setting, i) => {
                 if (setting.name === 'Logout' && !user) return null; // hide logout if no user
                 return (
                   <MenuItem

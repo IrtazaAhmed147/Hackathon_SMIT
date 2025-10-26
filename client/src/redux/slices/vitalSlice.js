@@ -24,15 +24,18 @@ const vitalSlice = createSlice({
             state.vitalLoading = false;
             state.vitalError = action.payload;
         },
-         vitalSuccess: (state) => {
+        vitalSuccess: (state) => {
             state.vitalLoading = false
             state.vitalError = null
-            
+
+        }, resetVitals: (state) => {
+            state.vitals = [];
+            state.vitalLoading = false;
+            state.vitalError = null;
         },
 
     }
 })
 
-export const { vitalFetchStart, vitalFetchSuccess, vitalFetchFailure,vitalSuccess , isPdfModal,
-  closePdfModal,} = vitalSlice.actions
+export const { vitalFetchStart, vitalFetchSuccess, vitalFetchFailure, vitalSuccess, resetVitals } = vitalSlice.actions
 export default vitalSlice.reducer

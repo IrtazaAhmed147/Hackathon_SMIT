@@ -1,32 +1,61 @@
 import mongoose from "mongoose";
 
-const vitalSchema = new mongoose.Schema({
-    userId:{
-        type: mongoose.Schema.Types.ObjectId,
-        required: true
+const vitalSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User", // optional but good practice
     },
-    bloodPressure: {
-        type: String,
-        required: true,        
-    },
-    
-    sugar: {
-        type:String,
+       familyMemberId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "familyMember",
+          default: null, 
+        },
 
+    bloodPressure: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    heartRate: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    temperature: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    bloodSugar: {
+      type: String,
+      required: true,
+      trim: true,
     },
 
     weight: {
-        required: true,
-        type: String,
+      type: String,
+      required: true,
+      trim: true,
     },
+
+    height: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
     note: {
-        required: true,
-        type: String,
-        lowercase: true,
+      type: String,
+      trim: true,
+      default: "",
     },
+  },
+  { timestamps: true }
+);
 
-},
-    { timestamps: true }
-)
-
-export default mongoose.model("vital", vitalSchema)
+export default mongoose.model("Vital", vitalSchema);

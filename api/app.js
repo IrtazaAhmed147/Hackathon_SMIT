@@ -7,6 +7,8 @@ import { userRouter } from './routes/userRoute.js'
 import { authRouter } from './routes/authRoute.js'
 import { reportRouter } from './routes/reportRoute.js'
 import { vitalRouter } from './routes/vitalRoute.js'
+import { aiRouter } from './routes/aiRoute.js'
+import familyMemberRouter from './routes/familyMemberRoute.js'
 // import mongoSanitize from "express-mongo-sanitize"
 
 const app = express()
@@ -35,7 +37,8 @@ app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 app.use('/api/report', reportRouter)
 app.use('/api/vital', vitalRouter)
-
+app.use("/api/ai", aiRouter);
+app.use("/api/family", familyMemberRouter);
 
 
 

@@ -1,33 +1,73 @@
 import vitalModel from "../models/vitalModel.js";
 import { errorHandler, successHandler } from "../utils/responseHandler.js";
-export const createVitals = async(req,res)=> {
-        try {
-            console.log(req.user);
-            console.log(req.body);
-    
-            const { bloodPressure, sugar, weight, note} = req.body;
-            
-         
-         
-            const vitalData = await vitalModel({
-                userId: req.user.id,
-                bloodPressure, sugar, weight, note
-            })
-            await vitalData.save()
-            successHandler(res, 201, "vital manuals created successfully", vitalData)
-        } catch (error) {
-            errorHandler(res, 400, error.message)
-        }
-}   
 
+// ✅ Create new vital record
+export const createVitals = async (req, res) => {
+  try {
+    console.log("User:", req.user);
+    console.log("Body:", req.body);
 
-export const getAllVitals = async(req,res) => {
-     try {
-            const vitalData = await vitalModel.find({userId: req.user.id})
-            successHandler(res, 200, "All vitals fetched", vitalData)
-        }
-        catch (err) {
-            console.log(err);
-            errorHandler(res, 400, err.message)
-        }
-}
+    const {
+      bloodPressure,
+      heartRate,
+      temperature,
+      bloodSugar,
+      weight,
+      height,
+      note,
+      memberId
+    } = req.body;
+
+    // Basic validation (optional)
+    if (!bloodPressure || !heartRate || !temperature || !bloodSugar || !weight || !height) {
+      return errorHandler(res, 400, "Please fill all required fields");
+    }
+
+    const vitalData = new vitalModel({
+      userId: req.user.id,
+        familyMemberId: memberId || null, 
+      bloodPressure,
+      heartRate,
+      temperature,
+      bloodSugar,
+      weight,
+      height,
+      note,
+    });
+
+    await vitalData.save();
+
+    successHandler(res, 201, "Vitals created successfully", vitalData);
+  } catch (error) {
+    console.error(error);
+    errorHandler(res, 400, error.message);
+  }
+};
+
+// ✅ Get all vitals for logged-in user
+export const getAllVitals = async (req, res) => {
+  try {
+    const vitalData = await vitalModel
+      .find({ userId: req.user.id })
+      .sort({ createdAt: -1 }); // latest first
+
+    successHandler(res, 200, "All vitals fetched successfully", vitalData);
+  } catch (err) {
+    console.error(err);
+    errorHandler(res, 400, err.message);
+  }
+};
+export const getMemberVitals = async (req, res) => {
+  try {
+     const { memberId } = req.params;
+
+    const vitalData = await vitalModel
+     .find({ userId: req.user.id, familyMemberId: memberId })
+      .sort({ createdAt: -1 }); // latest first
+
+    successHandler(res, 200, "member vitals fetched successfully", vitalData);
+  } catch (err) {
+    console.error(err);
+    errorHandler(res, 400, err.message);
+  }
+};
