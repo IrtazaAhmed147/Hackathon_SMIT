@@ -1,56 +1,114 @@
-import { Box, Divider, Paper, Typography } from '@mui/material'
-
+import React from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Divider,
+  Stack,
+} from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import OpacityIcon from "@mui/icons-material/Opacity";
+import DeviceThermostatIcon from "@mui/icons-material/DeviceThermostat";
+import BloodtypeIcon from "@mui/icons-material/Bloodtype";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
-import NoteAltIcon from "@mui/icons-material/NoteAlt";
-import React from 'react'
+import StraightenIcon from "@mui/icons-material/Straighten";
 
-function VitalCard({bloodPressure, sugar, weight, note,createdAt}) {
+export default function VitalCard({ vital }) {
+  const {
+    bloodPressure = "-",
+    heartRate = "-",
+    temperature = "-",
+    bloodSugar = "-",
+    weight = "-",
+    height = "-",
+    note = "",
+    createdAt,
+  } = vital || {};
+
+  const formattedDate = createdAt
+    ? new Date(createdAt).toLocaleDateString()
+    : "—";
+
+  const vitalsList = [
+    { icon: <OpacityIcon sx={{ color: "#00796b", fontSize: 18 }} />, label: "Blood Pressure", value: `${bloodPressure} mmHg` },
+    { icon: <FavoriteIcon sx={{ color: "#e53935", fontSize: 18 }} />, label: "Heart Rate", value: `${heartRate} bpm` },
+    { icon: <DeviceThermostatIcon sx={{ color: "#ff9800", fontSize: 18 }} />, label: "Temperature", value: `${temperature} °F` },
+    { icon: <BloodtypeIcon sx={{ color: "#8e24aa", fontSize: 18 }} />, label: "Blood Sugar", value: `${bloodSugar} mg/dL` },
+    { icon: <FitnessCenterIcon sx={{ color: "#0288d1", fontSize: 18 }} />, label: "Weight", value: `${weight} kg` },
+    { icon: <StraightenIcon sx={{ color: "#43a047", fontSize: 18 }} />, label: "Height", value: `${height} cm` },
+  ];
+
   return (
-    <Paper 
-            elevation={3}
-            sx={{
-                width:'300px',
-              p: 3,
-              mb: 3,
-              borderRadius: 3,
-              transition: "0.3s",
-              "&:hover": { transform: "scale(1.02)", boxShadow: 6 },
-            }}
-          >
-          
-            <Box display="flex" alignItems="center" mb={1}>
-              <FavoriteIcon color="error" sx={{ mr: 1 }} />
-              <Typography>BP: {bloodPressure || "—"}</Typography>
-            </Box>
+    <Card
+      elevation={3}
+      sx={{
+        borderRadius: 3,
+        background: "#ffffff",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+        border: "1px solid #e0e0e0",
+        transition: "0.3s",
+        "&:hover": {
+          transform: "translateY(-3px)",
+          boxShadow: "0 6px 16px rgba(0,0,0,0.1)",
+        },
+      }}
+    >
+      <CardContent sx={{ p: 2.5 }}>
+        {/* Header */}
+        <Box textAlign="center" mb={1}>
+          <Typography variant="caption" color="text.secondary">
+            {formattedDate}
+          </Typography>
+        </Box>
 
-            <Box display="flex" alignItems="center" mb={1}>
-              <OpacityIcon color="info" sx={{ mr: 1 }} />
-              <Typography>Sugar: {sugar || "—"} mg/dL</Typography>
-            </Box>
+        <Divider sx={{ mb: 1.5 }} />
 
-            <Box display="flex" alignItems="center" mb={1}>
-              <FitnessCenterIcon color="success" sx={{ mr: 1 }} />
-              <Typography>Weight: {weight || "—"} kg</Typography>
-            </Box>
-
-            <Box display="flex" alignItems="center" mt={1}>
-              <NoteAltIcon color="disabled" sx={{ mr: 1 }} />
-              <Typography variant="body2" color="text.secondary">
-                {note || "No notes"}
+        {/* Vertical Vitals List */}
+        <Stack spacing={1}>
+          {vitalsList.map((item, index) => (
+            <Box
+              key={index}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                px: 1,
+                py: 0.6,
+                gap:1,
+                borderRadius: 2,
+                backgroundColor: "#fafafa",
+                "&:hover": { backgroundColor: "#f3f3f3" },
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                {item.icon}
+                <Typography variant="body2" sx={{ fontSize: "0.8rem", fontWeight: 600 }}>
+                  {item.label}
+                </Typography>
+              </Box>
+              <Typography variant="body2" sx={{ fontSize: "0.8rem" }} color="text.secondary">
+                {item.value}
               </Typography>
             </Box>
+          ))}
+        </Stack>
 
+        {/* Notes */}
+        {note && (
+          <Box mt={1.5}>
+            <Divider sx={{ mb: 0.5 }} />
             <Typography
-              variant="caption"
+              variant="body2"
               color="text.secondary"
-              sx={{ display: "block", mt: 2 }}
+              textAlign="center"
+              sx={{ fontSize: "0.8rem" }}
             >
-              {new Date(createdAt).toLocaleString()}
+              <strong>Note:</strong> {note}
             </Typography>
-          </Paper>
-  )
+          </Box>
+        )}
+      </CardContent>
+    </Card>
+  );
 }
-
-export default VitalCard

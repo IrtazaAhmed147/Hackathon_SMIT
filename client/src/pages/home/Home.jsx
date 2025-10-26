@@ -8,7 +8,7 @@ import MedicalInformationIcon from "@mui/icons-material/MedicalInformation";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import AddIcon from "@mui/icons-material/Add";
-import CreateMemberModal from "../../components/modal/createMemberModal";
+import CreateMemberModal from "../../components/modal/CreateMemberModal";
 import { createFamilyMember, getFamilyMembers } from "../../redux/actions/familyMemberActions";
 import { notify } from "../../utils/HelperFunctions";
 import { useDispatch, useSelector } from "react-redux";

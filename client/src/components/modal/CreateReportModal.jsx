@@ -8,11 +8,13 @@ import {
   IconButton,
   Divider,
   Paper,
+  CircularProgress,
+  Backdrop,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 
-const CreateReportModal = ({ open, onClose, onSubmit,aiLoading, reportLoading }) => {
+const CreateReportModal = ({ open, onClose, onSubmit, aiLoading, reportLoading }) => {
   const [form, setForm] = useState({
     reportName: "",
     doctor: "",
@@ -39,8 +41,10 @@ const CreateReportModal = ({ open, onClose, onSubmit,aiLoading, reportLoading })
     onSubmit(formData);
   };
 
+  const isLoading = aiLoading || reportLoading;
+
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={!isLoading ? onClose : undefined}>
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -58,14 +62,47 @@ const CreateReportModal = ({ open, onClose, onSubmit,aiLoading, reportLoading })
           display: "flex",
           flexDirection: "column",
           gap: 3,
+          pointerEvents: isLoading ? "none" : "auto",
+          opacity: isLoading ? 0.6 : 1,
         }}
       >
+        {/* Loading overlay */}
+        {isLoading && (
+          <Backdrop
+            open={true}
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              zIndex: 10,
+              width: "100%",
+              height: "100%",
+              bgcolor: "rgba(255,255,255,0.6)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 3,
+            }}
+          >
+            <Box textAlign="center">
+              <CircularProgress size={40} />
+              <Typography mt={2} fontWeight={600}>
+                {reportLoading
+                  ? "Uploading report..."
+                  : aiLoading
+                  ? "Analyzing report with AI..."
+                  : ""}
+              </Typography>
+            </Box>
+          </Backdrop>
+        )}
+
         {/* Header */}
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="h5" fontWeight={600}>
             Upload Report
           </Typography>
-          <IconButton onClick={onClose}>
+          <IconButton onClick={onClose} disabled={isLoading}>
             <CloseIcon />
           </IconButton>
         </Box>
@@ -84,6 +121,7 @@ const CreateReportModal = ({ open, onClose, onSubmit,aiLoading, reportLoading })
               fullWidth
               required
               variant="outlined"
+              disabled={isLoading}
             />
             <TextField
               label="Doctor Name"
@@ -92,6 +130,7 @@ const CreateReportModal = ({ open, onClose, onSubmit,aiLoading, reportLoading })
               onChange={handleChange}
               fullWidth
               variant="outlined"
+              disabled={isLoading}
             />
             <TextField
               label="Hospital Name"
@@ -100,14 +139,10 @@ const CreateReportModal = ({ open, onClose, onSubmit,aiLoading, reportLoading })
               onChange={handleChange}
               fullWidth
               variant="outlined"
+              disabled={isLoading}
             />
 
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              mt={2}
-            >
+            <Box display="flex" alignItems="center" justifyContent="space-between" mt={2}>
               <Typography variant="body1" fontWeight={500}>
                 Upload Report (PDF)
               </Typography>
@@ -115,6 +150,7 @@ const CreateReportModal = ({ open, onClose, onSubmit,aiLoading, reportLoading })
                 variant="contained"
                 component="label"
                 startIcon={<PictureAsPdfIcon />}
+                disabled={isLoading}
                 sx={{
                   background: "linear-gradient(135deg, #4caf50, #2196f3)",
                   textTransform: "none",
@@ -163,9 +199,7 @@ const CreateReportModal = ({ open, onClose, onSubmit,aiLoading, reportLoading })
               />
             ) : (
               <Box textAlign="center" p={3}>
-                <PictureAsPdfIcon
-                  sx={{ fontSize: 60, color: "#9e9e9e", mb: 1 }}
-                />
+                <PictureAsPdfIcon sx={{ fontSize: 60, color: "#9e9e9e", mb: 1 }} />
                 <Typography color="text.secondary">
                   No PDF Selected — Preview will appear here
                 </Typography>
@@ -181,14 +215,15 @@ const CreateReportModal = ({ open, onClose, onSubmit,aiLoading, reportLoading })
           <Button
             variant="outlined"
             onClick={onClose}
+            disabled={isLoading}
             sx={{ textTransform: "none", px: 3 }}
           >
-            Cancel 
+            Cancel
           </Button>
           <Button
             type="submit"
             variant="contained"
-            disabled={aiLoading || reportLoading}
+            disabled={isLoading}
             sx={{
               textTransform: "none",
               px: 3,
@@ -198,7 +233,11 @@ const CreateReportModal = ({ open, onClose, onSubmit,aiLoading, reportLoading })
               },
             }}
           >
-            Upload Report
+            {reportLoading
+              ? "Uploading..."
+              : aiLoading
+              ? "Analyzing with AI..."
+              : "Upload Report"}
           </Button>
         </Box>
       </Box>

@@ -21,8 +21,8 @@ import { getSingleFamilyMember } from "../../redux/actions/familyMemberActions.j
 import { analyzeReport } from "../../redux/actions/aiAction.js";
 import CreateVitalModal from "../../components/modal/CreateVitalModal.jsx";
 import { createVital, getMemberVitals } from "../../redux/actions/vitalActions.js";
-import VitalCard from "../../components/cards/VitalCard.jsx";
 import ReportTable from "../../components/tables/ReportTable.jsx";
+import VitalCard from "../../components/cards/vitalCard.jsx";
 
 const FamilyMemberReports = () => {
   const dispatch = useDispatch();
@@ -53,7 +53,7 @@ const FamilyMemberReports = () => {
   };
   const handleSubmitReport = async (formData) => {
     formData.append("memberId", memberId);
-    await dispatch(createReport(formData)).then((id) => dispatch(analyzeReport(id))).then((msg) => notify("success", msg)).then((msg) => notify("error", msg));
+    await dispatch(createReport(formData)).then((id) => dispatch(analyzeReport(id))).then((msg) => notify("success", msg)).catch((msg) => notify("error", msg));
     setOpenModal(false);
   };
 

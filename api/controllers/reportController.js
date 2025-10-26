@@ -1,6 +1,9 @@
 import reportModel from "../models/reportModel.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { errorHandler, successHandler } from "../utils/responseHandler.js";
+import aiInsightsModel from "../models/aiInsightsModel.js";
+
+
 export const createReport = async (req, res) => {
   try {
     console.log(req.body);
@@ -63,32 +66,29 @@ export const getFamilyMemberReports = async (req, res) => {
 };
 
 
-
-export const analyzeReport = async (req, res) => {
+export const deleteReport = async (req, res) => {
   try {
     const { id } = req.params;
-    await connectDB();
-    const report = await Report.findById(id);
-    if (!report) return errorHandler(res, 404, "Report not found");
 
-    // 🔹 Temporary mocked response for now (replace with Gemini later)
-    const insight = {
-      summary_en: "Your blood test shows mild vitamin D deficiency.",
-      summary_roman: "Aapke test me halka Vitamin D kami nazar aayi hai.",
-      vitals: [{ type: "Vitamin D", value: "18 ng/mL", normal: "30+" }],
-      questions_for_doctor: [
-        "Should I take supplements?",
-        "Do I need sunlight exposure?",
-      ],
-    };
+    // Find report to ensure it belongs to current user
+    const report = await reportModel.findOne({
+      _id: id,
+      userId: req.user.id,
+    });
 
-    report.insight = insight;
-    report.analyzed = true;
-    await report.save();
+    if (!report) {
+      return errorHandler(res, 404, "Report not found or unauthorized");
+    }
 
-    return successHandler(res, 200, "AI Summary generated", report);
-  } catch (err) {
-    console.log(err);
-    return errorHandler(res, 500, "Analyze failed", err.message);
+    // Delete AI insights linked to this report
+    await aiInsightsModel.deleteMany({ reportId: id });
+
+    // Delete the report itself
+    await reportModel.findByIdAndDelete(id);
+
+    successHandler(res, 200, "Report deleted successfully");
+  } catch (error) {
+    console.error("Error deleting report:", error);
+    errorHandler(res, 500, "Failed to delete report", error.message);
   }
 };

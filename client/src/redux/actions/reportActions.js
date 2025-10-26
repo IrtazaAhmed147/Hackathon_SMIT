@@ -72,3 +72,23 @@ export const getFamilyMemberReports = (memberId) => async (dispatch) => {
     dispatch(reportFetchFailure(error.message));
   }
 };
+
+
+export const deleteReport = (id) => async (dispatch) => {
+  try {
+    dispatch(reportFetchStart());
+
+    const res = await api.delete(`/report/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
+    });
+
+    if (res.data.success) {
+      dispatch(reportSuccess());
+    }
+    return res.data.message;
+  } catch (error) {
+    console.error("error:", error);
+    dispatch(reportFetchFailure(error.message));
+  }
+};

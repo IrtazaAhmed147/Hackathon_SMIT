@@ -27,6 +27,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getSingleAiInsights } from "../../redux/actions/aiAction";
 import { motion } from "framer-motion";
+import { deleteReport } from "../../redux/actions/reportActions";
+import { notify } from "../../utils/HelperFunctions";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -164,6 +166,11 @@ export default function ReportDetailPage() {
                   </Tooltip>
                   <Tooltip title="Delete Report">
                     <IconButton
+                      onClick={() => dispatch(deleteReport(id)).then((msg) => {
+                        notify("success", msg)
+                        navigate(-1)
+                      }).catch((err) => notify("error", err))
+                      }
                       sx={{
                         bgcolor: "#ffebee",
                         "&:hover": { bgcolor: "#ffcdd2" },
