@@ -14,9 +14,12 @@ export const analyzeReport = async (req, res) => {
     const report = await reportModel.findById(id);
 
     if (!report) return errorHandler(res, 404, "Report not found");
-
+    
     // 1️⃣ Extract text from PDF
+    console.log(report);
+    
     const reportText = await extractTextFromPdf(report.reportPdf);
+    console.log(reportText);
 
     // 2️⃣ Strong prompt enforcing JSON
     const prompt = `

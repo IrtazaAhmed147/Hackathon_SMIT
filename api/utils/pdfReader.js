@@ -1,26 +1,44 @@
-// import { createRequire } from "module";
-// import fs from "fs";
+import PDFParser from "pdf2json";
+import fetch from "node-fetch";
 
-// const require = createRequire(import.meta.url);
-// let pdfModule = require("pdf-parse");
-// const pdf = typeof pdfModule === "function" ? pdfModule : pdfModule.default;
-// const { PDFParse } = require('pdf-parse');
-import {PDFParse} from 'pdf-parse'
-/**
- * Reads a PDF file (from URL or local) and returns its text content.
- * Works with Cloudinary URLs or local file paths.
- * @param {string} filePathOrUrl - Path or Cloudinary URL of the uploaded PDF
- * @returns {Promise<string>} Extracted text
- */
 export const extractTextFromPdf = async (filePathOrUrl) => {
-  try {
-    const parser = new PDFParse({ url: filePathOrUrl});
+  return new Promise(async (resolve, reject) => {
+    const pdfParser = new PDFParser();
+    let dataBuffer;
 
-	const result = await parser.getText();
-   return result.text?.trim() || "";
-    
-  } catch (error) {
-    console.error("PDF Parsing Error:", error);
-    throw new Error("Failed to extract text from PDF");
-  }
+    const safeDecode = (text) => {
+      try {
+        return decodeURIComponent(text);
+      } catch {
+        return text;
+      }
+    };
+
+    try {
+      if (filePathOrUrl.startsWith("http")) {
+        const response = await fetch(filePathOrUrl);
+        if (!response.ok) throw new Error("Failed to fetch PDF");
+        dataBuffer = Buffer.from(await response.arrayBuffer());
+      } else {
+        const fs = await import("fs/promises");
+        dataBuffer = await fs.readFile(filePathOrUrl);
+      }
+
+      pdfParser.on("pdfParser_dataError", (err) => reject(err.parserError));
+      pdfParser.on("pdfParser_dataReady", (pdfData) => {
+        const text = pdfData.Pages.map((page) =>
+          page.Texts.map((t) =>
+            safeDecode(t.R.map((r) => r.T).join(""))
+          ).join(" ")
+        ).join("\n");
+
+        resolve(text.trim());
+      });
+
+      pdfParser.parseBuffer(dataBuffer);
+    } catch (err) {
+      console.error("PDF Parsing Error:", err);
+      reject("Failed to extract text from PDF");
+    }
+  });
 };
