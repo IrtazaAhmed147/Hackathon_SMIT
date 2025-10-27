@@ -6,7 +6,6 @@ import Login from './pages/login/Login.jsx';
 import Signup from './pages/signup/Signup.jsx';
 import Otp from './pages/otp/Otp.jsx';
 import NotFound from './pages/notFound/NotFound.jsx';
-import Reports from './pages/reports/Reports.jsx';
 import ReportDetailPage from './pages/reportDetailPage/ReportDetailPage.jsx';
 import FamilyMemberReports from './pages/familyMember/FamilyMemberReports.jsx';
 import Chatbot from './pages/chatbot/Chatbot.jsx';
@@ -32,7 +31,6 @@ function App() {
 
         <Route element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path='/reports' element={<Reports />} />
           <Route path='/report/:id' element={<ReportDetailPage />} />
           <Route path='/reports/family-member/:memberId' element={<FamilyMemberReports />} />
           <Route path='/chatbot' element={<Chatbot />} />
