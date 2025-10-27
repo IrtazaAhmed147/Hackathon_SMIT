@@ -14,19 +14,34 @@ import { notify } from "../../utils/HelperFunctions";
 import { useDispatch, useSelector } from "react-redux";
 import FamilyMemberCard from "../../components/cards/FamilyMemberCard";
 import FeatureCard from "../../components/cards/FeatureCard";
+import { useNavigate } from "react-router-dom";
 
 
 const Home = () => {
 
   const [openModal, setOpenModal] = useState(false);
   const [formData, setFormData] = useState({});
+  const navigate  = useNavigate()
   const { familyMembers, familyLoading, familyError } = useSelector(
     (state) => state.familyMember
   );
+  const {user} = useSelector((state)=> state.auth)
+  
+  
+  
+  useEffect(() => {
+    if(!user) {
+      navigate('/login')
+    }
+  }, [])
+  
 
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(getFamilyMembers());
+    if(user) {
+
+      dispatch(getFamilyMembers());
+    }
 
   }, [dispatch]);
 

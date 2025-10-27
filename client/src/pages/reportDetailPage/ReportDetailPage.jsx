@@ -17,12 +17,9 @@ import { Document, Page, pdfjs } from "react-pdf";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getSingleAiInsights } from "../../redux/actions/aiAction";
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { getSingleFamilyMember } from "../../redux/actions/familyMemberActions";
 import { deleteReport } from "../../redux/actions/reportActions";
 import { notify } from "../../utils/HelperFunctions";
-// import { getSingleAiInsights } from "../../redux/aiSlice"; // update path
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -30,17 +27,25 @@ export default function ReportDetailPage() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const { aiInsight, aiLoading } = useSelector((state) => state.ai);
-   const { familyMember } = useSelector(
-      (state) => state.familyMember
-    );
-    
+     const {user} = useSelector((state)=> state.auth)
 
   const [language, setLanguage] = useState("english");
   const [numPages, setNumPages] = useState(null);
 
   const navigate = useNavigate()
   useEffect(() => {
-    dispatch(getSingleAiInsights(id))
+    if(!user) {
+
+      navigate('/login')
+    }
+    
+    
+  }, []);
+  useEffect(() => {
+    if(user) {
+
+      dispatch(getSingleAiInsights(id))
+    }
     console.log(aiInsight);
     
   }, [dispatch, id]);

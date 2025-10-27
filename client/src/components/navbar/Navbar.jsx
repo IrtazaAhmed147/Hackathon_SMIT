@@ -48,7 +48,6 @@ const settings = [
 function Navbar() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { user } = useSelector((state) => state.auth)
 
   return (
     <AppBar position="static" sx={{ background: "linear-gradient(135deg, #40b77d, #34a3c8)" }}>
@@ -143,6 +142,7 @@ function Navbar() {
               justifyContent: "center",
               boxShadow: 2,
             }}
+            onClick={()=>  handleLogout( navigate,dispatch)}
           >
             <Tooltip title="Logout" arrow>
               <LogoutIcon />

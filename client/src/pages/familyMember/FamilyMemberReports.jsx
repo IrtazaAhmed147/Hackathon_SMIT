@@ -43,6 +43,8 @@ const FamilyMemberReports = () => {
   const {vital, vitals, vitalLoading } = useSelector(
     (state) => state.vital
   );
+  
+    const {user} = useSelector((state)=> state.auth)
 
 const handleSubmitVital = async (formData) => {
   if (
@@ -133,7 +135,7 @@ const handleSubmitVital = async (formData) => {
 
 
   useEffect(() => {
-    if (memberId) {
+    if (memberId && user) {
       dispatch(getFamilyMemberReports(memberId));
       dispatch(getSingleFamilyMember(memberId));
       dispatch(getMemberVitals(memberId));
