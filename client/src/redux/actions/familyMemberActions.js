@@ -29,7 +29,8 @@ export const createFamilyMember = (formData) => async (dispatch) => {
     return res.data.message; // return created member
   } catch (error) {
     console.error("Create Family Member Error:", error);
-    dispatch(familyFetchFailure(error.message));
+    dispatch(familyFetchFailure(error));
+    throw error
   }
 };
 
@@ -59,7 +60,8 @@ export const getFamilyMembers = () => async (dispatch) => {
 export const getSingleFamilyMember = (id) => async (dispatch) => {
   try {
     dispatch(familyFetchStart());
-
+    console.log(id);
+    
     const res = await api.get(`/family/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,

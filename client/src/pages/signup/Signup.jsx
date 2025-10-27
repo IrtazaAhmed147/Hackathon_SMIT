@@ -40,16 +40,13 @@ function Signup() {
       <form
         className="login-form"
         onSubmit={handleForm}
-        style={{
-          boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-          width: '360px',
-        }}
+       
       >
         <h2
           style={{
             textAlign: 'center',
             color: '#000',
-            marginBottom: '1.5rem',
+            marginBottom: '1rem',
             fontWeight: '700',
           }}
         >

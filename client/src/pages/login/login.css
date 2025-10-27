@@ -25,7 +25,7 @@
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
   border-radius: 20px;
-  padding: 40px 35px;
+  padding: 35px 30px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   transition: 0.3s all ease;
 }
@@ -72,7 +72,7 @@
 
 .inputForm svg {
   color: #34a3c8;
-  margin-right: 10px;
+  /* margin-right: 10px; */
 }
 
 .input {
@@ -158,4 +158,33 @@
   font-weight: 600;
   color: #333;
   margin-bottom: 5px;
+}
+
+
+@media only screen and (max-width: 410px) {
+ .login-form {
+    width: 95%;
+        padding: 20px 15px;
+
+  }
+  .inputForm{
+        padding: 7px 9px;
+        margin-bottom: 10px;
+
+  }
+  .button-submit{
+    padding: 9px;
+  }
+  .login-form h2{
+    font-size: 20px;
+  }
+  .login-subtitle {
+    margin-bottom: 20px
+  }
+  .flex-column label{
+    font-size: 14px;
+  }
+  .input{
+    font-size: 15px;
+  }
 }

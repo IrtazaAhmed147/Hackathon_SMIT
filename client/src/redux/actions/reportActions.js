@@ -31,6 +31,7 @@ export const createReport = (form) => async (dispatch) => {
         console.log(error.response.data.message);
         
         dispatch(reportUploadFailure(error.response.data.message))
+        throw error.response.data.message
       }
     }
 }

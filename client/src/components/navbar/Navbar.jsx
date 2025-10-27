@@ -12,25 +12,19 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { Link, useNavigate } from 'react-router-dom';
-import api from '../../utils/common.js'
 import { useDispatch, useSelector } from 'react-redux';
-import { userReset } from '../../redux/slices/authSlice';
-import { notify } from '../../utils/HelperFunctions';
-import { resetReports } from '../../redux/slices/reportSlice.js';
-import { resetAi } from '../../redux/slices/aiSlice.js';
-import { resetFamilyMembers } from '../../redux/slices/familyMemberSlice.js';
-import { resetVitals } from '../../redux/slices/vitalSlice.js';
-
+import { handleLogout, notify } from '../../utils/HelperFunctions';
+import LogoutIcon from "@mui/icons-material/Logout";
 const pages = [
   {
     name: 'Home',
     url: '/'
   },
 
-  {
-    name: 'Chatbot',
-    url: '/chatbot'
-  },
+  // {
+  //   name: 'Chatbot',
+  //   url: '/chatbot'
+  // },
 
   {
     name: 'Login',
@@ -56,73 +50,28 @@ function Navbar() {
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.auth)
 
-
-  const handleLogout = async () => {
-    try {
-      // const res = await api.get('/auth/logout', {
-      //   withCredentials: true
-      // })
-
-      localStorage.removeItem('user')
-      localStorage.removeItem('token')
-      dispatch(userReset())
-      dispatch(resetReports())
-      dispatch(resetAi())
-      dispatch(resetFamilyMembers())
-      dispatch(resetVitals())
-      navigate('/login')
-
-      notify('success', 'User logged out successfully')
-
-    } catch (error) {
-      console.log(error);
-      notify('error', error.message)
-
-    }
-
-  }
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
   return (
     <AppBar position="static" sx={{ background: "linear-gradient(135deg, #40b77d, #34a3c8)" }}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
+      <Container maxWidth="xl" >
+        <Toolbar disableGutters sx={{display:'flex',justifyContent:'space-between'}}>
 
-          {/* <Typography
+          <Typography
             variant="h6"
             noWrap
-
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-
               fontWeight: 700,
               color: 'inherit',
               textDecoration: 'none',
             }}
           >
-            <Link to={'/'} style={{color:'rgb(216 216 216)'}}>
+            <Link to={'/'} style={{ color: '#fff' }}>
               HealthMate
             </Link>
-          </Typography> */}
+          </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -157,15 +106,15 @@ function Navbar() {
                 .map((page) => (
                   <MenuItem key={page.name} onClick={handleCloseNavMenu}>
                     <Link to={page.url}>
-                      <Typography sx={{ textAlign: 'center' }}>{page.name}</Typography>
+                      <Typography sx={{ textAlign: 'center',color: '#000' }}>{page.name}</Typography>
                     </Link>
                   </MenuItem>
                 ))}
             </Menu>
-          </Box>
+          </Box> */}
 
           {/* windows */}
-          {/* <Typography
+          <Typography
             variant="h5"
             noWrap
             sx={{
@@ -177,11 +126,29 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
-            <Link to={'/'} style={{color:'rgb(216 216 216)'}}>
+            <Link to={'/'} style={{ color: '#fff' }}>
               HealthMate
             </Link>
-          </Typography> */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          </Typography>
+
+          <Button
+            variant="contained"
+            sx={{
+              minWidth: 0,
+              width: 48,
+              height: 48,
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: 2,
+            }}
+          >
+            <Tooltip title="Logout" arrow>
+              <LogoutIcon />
+            </Tooltip>
+          </Button>
+          {/* <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages
               .filter((page) => {
                 if (user && (page.name === 'Login' || page.name === 'signup')) return false
@@ -197,9 +164,8 @@ function Navbar() {
                   </Button>
                 </Link>
               ))}
-          </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            {/* profile image */}
+          </Box> */}
+          {/* <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar src="/broken-image.jpg" />
@@ -228,7 +194,7 @@ function Navbar() {
                     key={i}
                     onClick={() => {
                       if (setting.name === 'Logout') {
-                        handleLogout();
+                        handleLogout(navigate, dispatch);
                       } else {
                         navigate(`${setting.url}`);
                         handleCloseUserMenu();
@@ -240,7 +206,7 @@ function Navbar() {
                 );
               })}
             </Menu>
-          </Box>
+          </Box> */}
         </Toolbar>
       </Container>
     </AppBar>

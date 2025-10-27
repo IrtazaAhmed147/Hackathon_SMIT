@@ -83,12 +83,12 @@ const Home = () => {
         }}
       >
         <Typography
-          variant="h2"
           fontWeight="bold"
+          variant="h3"
           gutterBottom
-          sx={{ letterSpacing: 1 }}
+          sx={{ letterSpacing: 1, fontSize: { xs: "2rem", sm: "3rem", md: "3rem" } }}
         >
-          HealthMate
+          Your Digital Health Partner
         </Typography>
         <Typography
           variant="h6"
@@ -97,25 +97,27 @@ const Home = () => {
             mx: "auto",
             opacity: 0.9,
             lineHeight: 1.6,
-            fontSize: "1rem",
+            fontSize: { xs: "16px", sm: "1rem", md: "1rem" },
           }}
         >
-          Your Personal Health Assistant — Store Medical Reports, Track Vitals,
-          and Get AI-Powered Insights for Better Well-being.
+          Empowering you to take control of your health with smart storage,
+          tracking, and AI-driven insights.
         </Typography>
       </Box>
 
       {/* Family Members Section */}
-      <Box sx={{ mt: 10, px: { xs: 3, md: 10 } }}>
+      <Box sx={{ mt: { xs: 5, sm: 10, md: 10 }, px: { xs: 1, sm: 10, md: 10 } }}>
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            flexWrap: "wrap",
             mb: 3,
+            gap: 1
           }}
         >
-          <Typography variant="h4" fontWeight="bold" color="text.primary">
+          <Typography variant="h4" fontWeight="bold" color="text.primary" sx={{ fontSize: { xs: '28px', sm: '2.3rem', md: '2.3rem' } }}>
             Family Members
           </Typography>
 
@@ -149,6 +151,7 @@ const Home = () => {
           sx={{
             display: "flex",
             flexWrap: "wrap",
+            justifyContent: { xs: 'center', sm: "start", md: 'start' },
             gap: 3,
           }}
         >
@@ -168,7 +171,7 @@ const Home = () => {
       </Box>
 
       {/* Features Section */}
-      <Box sx={{ mt: 8, px: { xs: 3, md: 10 } }}>
+      <Box sx={{ mt: 8, px: { xs: 3, sm: 10, md: 10 } }}>
         <Typography
           variant="h4"
           textAlign="center"

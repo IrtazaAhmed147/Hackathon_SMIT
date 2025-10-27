@@ -5,14 +5,14 @@ import { extractTextFromPdf } from "../utils/pdfReader.js";
 import { errorHandler, successHandler } from "../utils/responseHandler.js";
 
 export const analyzeReport = async (req, res) => {
-  
-  
+
+
   try {
     const { id } = req.params;
-    if(!id) return errorHandler(res, 404, "Report not uploaded")
+    if (!id) return errorHandler(res, 404, "Report not uploaded")
     const userId = req.user.id;
     const report = await reportModel.findById(id);
-    
+
     if (!report) return errorHandler(res, 404, "Report not found");
 
     // 1️⃣ Extract text from PDF
@@ -81,12 +81,17 @@ Return ONLY a valid JSON object (no markdown, no explanation), with this structu
 
 
 export const getSingleAiInsights = async (req, res) => {
-    try {
-        const reportData = await aiInsightsModel.findOne({fileId:req.params.id}).populate("fileId");
-        successHandler(res, 200, "Report found successfully", reportData)
-    }
-    catch (err) {
-        console.log(err);
-        errorHandler(res, 400, err.message)
-    }
+  try {
+    const reportData = await aiInsightsModel.findOne({ fileId: req.params.id }).populate({
+      path: "fileId",
+      populate: {
+        path: "familyMemberId",
+      },
+    });
+    successHandler(res, 200, "Report found successfully", reportData)
+  }
+  catch (err) {
+    console.log(err);
+    errorHandler(res, 400, err.message)
+  }
 }

@@ -6,6 +6,7 @@ import {
   Box,
   Divider,
   Stack,
+  IconButton,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import OpacityIcon from "@mui/icons-material/Opacity";
@@ -13,8 +14,10 @@ import DeviceThermostatIcon from "@mui/icons-material/DeviceThermostat";
 import BloodtypeIcon from "@mui/icons-material/Bloodtype";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import StraightenIcon from "@mui/icons-material/Straighten";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function VitalCard({ vital }) {
+export default function VitalCard({ vital,handleDeleteVital,handleUpdateVital }) {
   const {
     bloodPressure = "-",
     heartRate = "-",
@@ -47,6 +50,7 @@ export default function VitalCard({ vital }) {
         background: "#ffffff",
         boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
         border: "1px solid #e0e0e0",
+         position: "relative",
         transition: "0.3s",
         "&:hover": {
           transform: "translateY(-3px)",
@@ -54,6 +58,32 @@ export default function VitalCard({ vital }) {
         },
       }}
     >
+       <Box
+        sx={{
+          position: "absolute",
+          top: 6,
+          right: 6,
+          display: "flex",
+          gap: 0.5,
+        }}
+      >
+        <IconButton
+          size="small"
+          color="primary"
+          onClick={() => handleUpdateVital(vital._id)}
+          sx={{ p: 0.4 }}
+        >
+          <EditIcon sx={{ fontSize: 18 }} />
+        </IconButton>
+        <IconButton
+          size="small"
+          color="error"
+          onClick={() => handleDeleteVital(vital._id)}
+          sx={{ p: 0.4 }}
+        >
+          <DeleteIcon sx={{ fontSize: 18 }} />
+        </IconButton>
+      </Box>
       <CardContent sx={{ p:{xs:1,md: 2.5} }}>
         {/* Header */}
         <Box textAlign="center" mb={1}>

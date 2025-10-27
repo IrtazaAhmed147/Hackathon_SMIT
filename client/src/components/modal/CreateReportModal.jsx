@@ -48,23 +48,26 @@ const CreateReportModal = ({ open, onClose, onSubmit, aiLoading, reportLoading }
       <Box
         component="form"
         onSubmit={handleSubmit}
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          bgcolor: "background.paper",
-          borderRadius: 3,
-          boxShadow: "0 8px 30px rgba(0,0,0,0.3)",
-          width: "90%",
-          maxWidth: "1000px",
-          p: {xs:1,md:4},
-          display: "flex",
-          flexDirection: "column",
-          gap: 3,
-          pointerEvents: isLoading ? "none" : "auto",
-          opacity: isLoading ? 0.6 : 1,
-        }}
+       sx={{
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      bgcolor: "background.paper",
+      borderRadius: 3,
+      boxShadow: "0 8px 30px rgba(0,0,0,0.3)",
+      width: "90%",
+      maxWidth: "1000px",
+      maxHeight: "90vh", // 👈
+      overflowY: "auto", // 👈
+      scrollBehavior: "smooth",
+      p: { xs: 1, md: 4 },
+      display: "flex",
+      flexDirection: "column",
+      gap: { xs: 2, sm: 3, md: 3 },
+      pointerEvents: isLoading ? "none" : "auto",
+      opacity: isLoading ? 0.6 : 1,
+    }}
       >
         {/* Loading overlay */}
         {isLoading && (
@@ -110,9 +113,9 @@ const CreateReportModal = ({ open, onClose, onSubmit, aiLoading, reportLoading }
         <Divider />
 
         {/* Content */}
-        <Box display="flex" sx={{flexDirection:{xs:"column",md:"row"}}} gap={4} flexWrap={'wrap'}>
+        <Box display="flex" sx={{flexDirection:{xs:"column",md:"row"},gap:{xs:2,sm:4,md:4}}} flexWrap={'wrap'}>
           {/* Left: Form Fields */}
-          <Box flex={1} display="flex" flexDirection="column" gap={2}>
+          <Box flex={1} display="flex" flexDirection="column" sx={{gap:{xs:1,sm:2,md:2}}}>
             <TextField
               label="Report Name"
               name="reportName"
@@ -122,6 +125,7 @@ const CreateReportModal = ({ open, onClose, onSubmit, aiLoading, reportLoading }
               required
               variant="outlined"
               disabled={isLoading}
+              size="small"
              
             />
             <TextField
@@ -132,6 +136,7 @@ const CreateReportModal = ({ open, onClose, onSubmit, aiLoading, reportLoading }
               fullWidth
               variant="outlined"
               disabled={isLoading}
+              size="small"
             />
             <TextField
               label="Hospital Name"
@@ -141,9 +146,10 @@ const CreateReportModal = ({ open, onClose, onSubmit, aiLoading, reportLoading }
               fullWidth
               variant="outlined"
               disabled={isLoading}
+              size="small"
             />
 
-            <Box display="flex" alignItems="center" justifyContent="space-between" mt={2}>
+            <Box display="flex" alignItems="center" justifyContent="space-between" sx={{mt:{xs:1,sm:2,md:2}}}>
               <Typography variant="body1" fontWeight={500}>
                 Upload Report (PDF)
               </Typography>

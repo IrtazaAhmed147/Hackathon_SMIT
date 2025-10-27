@@ -1,334 +1,336 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  Stack,
   Typography,
-  IconButton,
-  Divider,
-  Tooltip,
-  Chip,
+  Paper,
   Button,
   CircularProgress,
-  List,
-  ListItem,
-  ToggleButton,
-  ToggleButtonGroup,
-  Card,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Tooltip,
+  IconButton,
 } from "@mui/material";
-import {
-  ArrowBack,
-  FileDownload,
-  DeleteOutline,
-  EditNote,
-  Share,
-} from "@mui/icons-material";
 import { Document, Page, pdfjs } from "react-pdf";
-import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { getSingleAiInsights } from "../../redux/actions/aiAction";
-import { motion } from "framer-motion";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { getSingleFamilyMember } from "../../redux/actions/familyMemberActions";
 import { deleteReport } from "../../redux/actions/reportActions";
 import { notify } from "../../utils/HelperFunctions";
+// import { getSingleAiInsights } from "../../redux/aiSlice"; // update path
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 export default function ReportDetailPage() {
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const { aiInsight, aiLoading } = useSelector((state) => state.ai);
+   const { familyMember } = useSelector(
+      (state) => state.familyMember
+    );
+    
+
   const [language, setLanguage] = useState("english");
   const [numPages, setNumPages] = useState(null);
-  const { aiInsight, aiLoading } = useSelector((state) => state.ai);
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
+  const navigate = useNavigate()
   useEffect(() => {
-    dispatch(getSingleAiInsights(id));
+    dispatch(getSingleAiInsights(id))
+    console.log(aiInsight);
+    
   }, [dispatch, id]);
+
+  if (aiLoading || !aiInsight)
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="80vh">
+        <CircularProgress />
+      </Box>
+    );
 
   const report = aiInsight?.fileId;
 
   return (
-    <Box
+    <Box sx={{ p: { xs: 1, md: 5 }, width: "100%", mx: "auto",background: "linear-gradient(135deg, #6ad8a2, #6bc1dd)" }}>
+      {/* ====== Report Header ====== */}
+ 
+  <Paper
       sx={{
-        minHeight: "100vh",
-        background:
-          "linear-gradient(135deg, #e0f7fa 0%, #e3f2fd 40%, #f1f8e9 100%)",
-        p: { xs: 2, md: 5 },
+        p: {xs:2,sm:3,md:3},
+        mb: 3,
+        borderRadius: 3,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
         display: "flex",
-        flexDirection: "column",
-        gap: 3,
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        flexWrap: "wrap",
+        gap: 2,
       }}
     >
-      {/* Header */}
-      <Stack direction="row" alignItems="center" spacing={2}>
-        <IconButton
-          onClick={() => navigate(-1)}
-          sx={{
-            bgcolor: "white",
-            boxShadow: 2,
-            "&:hover": { bgcolor: "#e3f2fd" },
-          }}
-        >
-          <ArrowBack />
-        </IconButton>
-        <Typography
-          variant="h4"
-          fontWeight="bold"
-          sx={{
-            background: "linear-gradient(90deg, #00796b, #0288d1)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}
-        >
-          {report?.reportName || "Medical Report Details"}
+      {/* Left Section — Report Info + Family Details */}
+      <Box>
+        {/* Report Info */}
+        <Typography variant="h5" fontWeight="bold" gutterBottom>
+          {report?.reportName?.charAt(0)?.toUpperCase() + report?.reportName?.slice(1) || "Medical Report"}
         </Typography>
-      </Stack>
+        <Typography variant="subtitle1" color="text.secondary">
+          Doctor: {report?.doctor || "Unknown"}
+        </Typography>
+        <Typography variant="subtitle1" color="text.secondary">
+          Hospital: {report?.hospital || "N/A"}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Created On: {new Date(report?.createdAt).toLocaleDateString()}
+        </Typography>
 
-      {aiLoading ? (
-        <Stack alignItems="center" mt={10}>
-          <CircularProgress />
-          <Typography mt={2}>Loading report...</Typography>
-        </Stack>
-      ) : (
+        {/* Divider-like spacing */}
         <Box
           sx={{
-            display: "flex",
-            flexDirection: { xs: "column", lg: "row" },
-            gap: 4,
+            mt: 2,
+            mb: 1,
+            height: "1px",
+            backgroundColor: "#eee",
+            width: "80%",
           }}
-        >
-          {/* LEFT: Information + AI Summary */}
-          <Stack flex={1} spacing={3}>
-            {/* Report Information Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Card
-                sx={{
-                  backdropFilter: "blur(12px)",
-                  background: "rgba(255, 255, 255, 0.75)",
-                  borderRadius: 4,
-                  boxShadow: "0 8px 25px rgba(0,0,0,0.08)",
-                  p: 3,
-                }}
-              >
-                <Typography variant="h6" fontWeight="bold" mb={2}>
-                  Report Overview
-                </Typography>
-                <Divider sx={{ mb: 2 }} />
+        />
 
-                <Typography variant="body1" mb={1}>
-                  <strong>Doctor:</strong> {report?.doctor || "N/A"}
-                </Typography>
-                <Typography variant="body1" mb={1}>
-                  <strong>Hospital:</strong> {report?.hospital || "N/A"}
-                </Typography>
-                <Typography variant="body1" mb={1}>
-                  <strong>Date:</strong>{" "}
-                  {new Date(report?.createdAt).toLocaleDateString()}
-                </Typography>
+        {/* Family Member Info */}
+        {report?.familyMemberId && (
+          <Box>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              Family Member Details
+            </Typography>
+            <Typography variant="body1">
+              <strong>Name:</strong> {aiInsight?.fileId.familyMemberId?.memberName || "N/A"}
+            </Typography>
+            <Typography variant="body1">
+              <strong>Relation:</strong> {aiInsight?.fileId.familyMemberId?.relation || "N/A"}
+            </Typography>
+            <Typography variant="body1">
+              <strong>Age:</strong> {aiInsight?.fileId.familyMemberId?.age || "N/A"}
+            </Typography>
+            <Typography variant="body1">
+              <strong>Gender:</strong> {aiInsight?.fileId.familyMemberId?.gender || "N/A"}
+            </Typography>
+          </Box>
+        )}
+      </Box>
 
-                <Stack direction="row" spacing={1.5} mt={3}>
-                  <Tooltip title="Download PDF">
-                    <IconButton
-                      onClick={() => window.open(report?.reportPdf, "_blank")}
-                      sx={{
-                        bgcolor: "#e8f5e9",
-                        "&:hover": { bgcolor: "#c8e6c9" },
-                      }}
-                      color="success"
-                    >
-                      <FileDownload />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Edit Report">
-                    <IconButton
-                      sx={{
-                        bgcolor: "#fff3e0",
-                        "&:hover": { bgcolor: "#ffe0b2" },
-                      }}
-                      color="warning"
-                    >
-                      <EditNote />
-                    </IconButton>
-                  </Tooltip>
-                  
-                  <Tooltip title="Delete Report">
-                    <IconButton
-                      onClick={() => dispatch(deleteReport(id)).then((msg) => {
-                        notify("success", msg)
-                        navigate(-1)
-                      }).catch((err) => notify("error", err))
-                      }
-                      sx={{
-                        bgcolor: "#ffebee",
-                        "&:hover": { bgcolor: "#ffcdd2" },
-                      }}
-                      color="error"
-                    >
-                      <DeleteOutline />
-                    </IconButton>
-                  </Tooltip>
-                </Stack>
-              </Card>
-            </motion.div>
-
-            {/* AI Summary */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7 }}
-            >
-              <Card
-                sx={{
-                  backdropFilter: "blur(12px)",
-                  background: "rgba(255, 255, 255, 0.7)",
-                  borderRadius: 4,
-                  boxShadow: "0 8px 25px rgba(0,0,0,0.08)",
-                  p: 3,
-                }}
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  mb={2}
-                >
-                  <Typography variant="h6" fontWeight="bold">
-                    AI Health Summary
-                  </Typography>
-                  <ToggleButtonGroup
-                    size="small"
-                    exclusive
-                    value={language}
-                    onChange={(e, val) => val && setLanguage(val)}
-                  >
-                    <ToggleButton value="english">English</ToggleButton>
-                    <ToggleButton value="urdu">Roman Urdu</ToggleButton>
-                  </ToggleButtonGroup>
-                </Stack>
-
-                <Typography
-                  variant="body1"
-                  sx={{
-                    lineHeight: 1.7,
-                    color: "#333",
-                    whiteSpace: "pre-line",
-                  }}
-                >
-                  {language === "english"
-                    ? aiInsight?.summaryEnglish
-                    : aiInsight?.summaryRomanUrdu}
-                </Typography>
-
-                {aiInsight?.doctorQuestions?.length > 0 && (
-                  <Box mt={3}>
-                    <Typography variant="subtitle1" fontWeight="bold" mb={1}>
-                      Suggested Questions for Doctor
-                    </Typography>
-                    <Stack direction="row" flexWrap="wrap" gap={1}>
-                      {aiInsight.doctorQuestions.map((q, i) => (
-                        <Chip
-                          key={i}
-                          label={q}
-                          variant="outlined"
-                          sx={{
-                            borderColor: "#0288d1",
-                            color: "#0288d1",
-                            fontWeight: 500,
-                          }}
-                        />
-                      ))}
-                    </Stack>
-                  </Box>
-                )}
-
-                {aiInsight?.suggestions?.length > 0 && (
-                  <Box mt={3}>
-                    <Typography variant="subtitle1" fontWeight="bold" mb={1}>
-                      Health Suggestions
-                    </Typography>
-                    <List dense>
-                      {aiInsight.suggestions.map((s, i) => (
-                        <ListItem key={i}>
-                          <Typography variant="body2" color="text.secondary">
-                            • {s}
-                          </Typography>
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Box>
-                )}
-
-                {aiInsight?.disclaimer && (
-                  <Typography
-                    variant="caption"
-                    color="error"
-                    display="block"
-                    mt={2}
-                    sx={{ opacity: 0.8 }}
-                  >
-                    ⚠️ {aiInsight.disclaimer}
-                  </Typography>
-                )}
-              </Card>
-            </motion.div>
-          </Stack>
-
-          {/* RIGHT: PDF Viewer */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
+      {/* Right Section — Action Buttons */}
+      <Box display="flex" gap={1} alignItems="center">
+      
+        {/* Delete */}
+        <Tooltip title="Delete Report" arrow>
+          <IconButton
+            onClick={() => dispatch( deleteReport(report?._id)).then(()=> {
+              notify("success", "report deleted successfully")
+              navigate(-1)
+            })}
+            sx={{
+              backgroundColor: "#ffebee",
+              color: "#d32f2f",
+              "&:hover": {
+                backgroundColor: "#ffcdd2",
+              },
+              width: 45,
+              height: 45,
+            }}
           >
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    </Paper>
+
+
+      {/* ====== PDF Viewer ====== */}
+      <Paper
+        sx={{
+          p: {xs:1,sm:3,md:3},
+          mb: 3,
+          borderRadius: 3,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        }}
+      >
+        <Typography variant="h6" fontWeight="bold" mb={2}>
+          Report PDF
+        </Typography>
+        {report?.reportPdf ? (
+          <>
             <Box
               sx={{
-                flex: { lg: "0 0 45%" },
-                position: { lg: "sticky" },
-                top: 100,
-                borderRadius: 4,
-                overflow: "hidden",
-                bgcolor: "#1a1a1a",
-                p: 2,
-                boxShadow: "0 8px 25px rgba(0,0,0,0.25)",
-                maxHeight: "80vh",
+                maxHeight: "70vh",
                 overflowY: "auto",
+                border: "1px solid #ddd",
+                borderRadius: 2,
+                p: 1,
+                backgroundColor: "#f9f9f9",
               }}
             >
-              <Typography
-                variant="h6"
-                fontWeight="bold"
-                mb={2}
-                color="white"
-                align="center"
-              >
-                PDF Report Preview
-              </Typography>
-
               <Document
                 file={report?.reportPdf}
                 onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-                loading={
-                  <Typography color="white" align="center">
-                    Loading PDF...
-                  </Typography>
-                }
               >
-                {Array.from(new Array(numPages), (_, index) => (
+                {Array.from(new Array(numPages), (el, index) => (
                   <Page
                     key={`page_${index + 1}`}
                     pageNumber={index + 1}
-                    width={400}
                     renderTextLayer={false}
                     renderAnnotationLayer={false}
+                    width={800}
+                    
                   />
                 ))}
               </Document>
             </Box>
-          </motion.div>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ mt: 2,background: "linear-gradient(135deg, #40b77d, #34a3c8)" }}
+              href={report?.reportPdf}
+              target="_blank"
+            >
+              Open Full PDF
+            </Button>
+          </>
+        ) : (
+          <Typography>No PDF available</Typography>
+        )}
+      </Paper>
+
+      {/* ====== Summary Section ====== */}
+      <Paper
+        sx={{
+          p: {xs:1,sm:3,md:3},
+          mb: 3,
+          borderRadius: 3,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        }}
+      >
+        <Box display="flex" flexWrap={"wrap"} gap={1} justifyContent="space-between" alignItems="center">
+          <Typography variant="h6" fontWeight="bold">
+            Summary
+          </Typography>
+          <Button
+            size="small"
+            variant="outlined"
+            sx={{background: "linear-gradient(135deg, #40b77d, #34a3c8)", color:"#fff"}}
+            onClick={() =>
+              setLanguage(language === "english" ? "roman" : "english")
+            }
+          >
+            {language === "english" ? "Show Roman Urdu" : "Show English"}
+          </Button>
         </Box>
+        <Typography sx={{ mt: 2, lineHeight: {xs:1.4,sm:1.5,md:1.7} }}>
+          {language === "english"
+            ? aiInsight?.summaryEnglish
+            : aiInsight?.summaryRomanUrdu}
+        </Typography>
+      </Paper>
+
+      {/* ====== Abnormal Values ====== */}
+      {aiInsight?.abnormalValues?.length > 0 && (
+        <Paper
+          sx={{
+            p: 3,
+            mb: 3,
+            borderRadius: 3,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          }}
+        >
+          <Typography variant="h6" fontWeight="bold" mb={2}>
+            Abnormal Values
+          </Typography>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ fontWeight: "bold" }}>Parameter</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Value</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {aiInsight.abnormalValues.map((item) => (
+                <TableRow key={item._id}>
+                  <TableCell>{item.parameter}</TableCell>
+                  <TableCell>{item.value}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Paper>
       )}
+
+      {/* ====== Doctor Questions ====== */}
+      {aiInsight?.doctorQuestions?.length > 0 && (
+        <Paper
+          sx={{
+            p: 3,
+            mb: 3,
+            borderRadius: 3,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          }}
+        >
+          <Typography variant="h6" fontWeight="bold" mb={2}>
+            Questions for Doctor
+          </Typography>
+          {aiInsight.doctorQuestions.map((q, i) => (
+            <Box key={i} display="flex" alignItems="start" mb={1}>
+              <Typography color="primary" mr={1}>
+                •
+              </Typography>
+              <Typography>{q}</Typography>
+            </Box>
+          ))}
+        </Paper>
+      )}
+
+      {/* ====== AI Suggestions ====== */}
+      {aiInsight?.suggestions?.length > 0 && (
+        <Paper
+          sx={{
+            p: 3,
+            mb: 3,
+            borderRadius: 3,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          }}
+        >
+          <Typography variant="h6" fontWeight="bold" mb={2}>
+            AI Suggestions
+          </Typography>
+          {aiInsight.suggestions.map((s, i) => (
+            <Box key={i} display="flex" alignItems="center" mb={1}>
+              <Typography color="success.main" mr={1}>
+                ✔
+              </Typography>
+              <Typography>{s}</Typography>
+            </Box>
+          ))}
+        </Paper>
+      )}
+
+      {/* ====== Disclaimer ====== */}
+      <Paper
+        sx={{
+          p: 2,
+          borderRadius: 3,
+          boxShadow: "0 1px 5px rgba(0,0,0,0.05)",
+          backgroundColor: "#f7f7f7",
+        }}
+      >
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          textAlign="center"
+          sx={{ fontStyle: "italic" }}
+        >
+          ⚠️ {aiInsight?.disclaimer}
+        </Typography>
+      </Paper>
     </Box>
   );
 }

@@ -34,11 +34,11 @@ const CreateMemberModal = ({
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 400,
+          width: {xs:"95%",sm:400,md:400},
           bgcolor: "background.paper",
           boxShadow: 24,
           borderRadius: 3,
-          p: 4,
+          p: {xs:2,sm:4,md:4},
         }}
       >
         {/* Header */}
@@ -59,6 +59,7 @@ const CreateMemberModal = ({
             name="name"
             value={safeForm.name}
             onChange={handleChange}
+            size={"small"}
             sx={{ mb: 2 }}
             required
           />
@@ -68,6 +69,7 @@ const CreateMemberModal = ({
             name="relation"
             value={safeForm.relation}
             onChange={handleChange}
+              size={"small"}
             sx={{ mb: 2 }}
             required
           />
@@ -78,6 +80,7 @@ const CreateMemberModal = ({
             type="number"
             value={safeForm.age}
             onChange={handleChange}
+              size={"small"}
             sx={{ mb: 2 }}
             required
           />
@@ -88,6 +91,7 @@ const CreateMemberModal = ({
             name="gender"
             value={safeForm.gender}
             onChange={handleChange}
+              size={"small"}
             sx={{ mb: 3 }}
             required
           >
